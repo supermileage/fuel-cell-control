@@ -1,0 +1,3 @@
+(sym_lib_table
+  (lib (name CD74HCT4051M)(type Legacy)(uri ${KIPRJMOD}/fuel-cell-control-library/CD74HCT4051M.lib)(options "")(descr ""))
+)
