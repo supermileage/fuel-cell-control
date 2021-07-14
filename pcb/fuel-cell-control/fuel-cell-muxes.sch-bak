@@ -115,26 +115,18 @@ F 9 "MUX36D08IDWR" H 5850 1300 50  0001 L CNN "Manufacturer_Part_Number"
 	1    4900 1900
 	1    0    0    -1  
 $EndComp
-Text HLabel 6200 4100 2    50   Output ~ 0
+Text HLabel 7050 4650 2    50   Output ~ 0
 DC
-Text HLabel 4700 4200 0    50   Output ~ 0
+Text HLabel 3900 4650 0    50   Output ~ 0
 DD
-Text HLabel 4700 2000 0    50   Output ~ 0
+Text HLabel 3900 2450 0    50   Output ~ 0
 DB
-Text HLabel 6200 1900 2    50   Output ~ 0
+Text HLabel 7050 2450 2    50   Output ~ 0
 DA
 Wire Wire Line
 	4900 1900 4800 1900
 Wire Wire Line
 	4800 1900 4800 1800
-Wire Wire Line
-	4700 2000 4900 2000
-Wire Wire Line
-	6000 1900 6200 1900
-Wire Wire Line
-	6000 4100 6200 4100
-Wire Wire Line
-	4900 4200 4700 4200
 Text HLabel 6200 2800 2    50   Input ~ 0
 S0A
 Text HLabel 6200 2700 2    50   Input ~ 0
@@ -346,14 +338,183 @@ $EndComp
 Wire Wire Line
 	6000 5100 6500 5100
 $Comp
-L Amplifier_Operational:LM741 U?
-U 1 1 60D2C0B8
-P 7650 2250
-F 0 "U?" H 7994 2296 50  0000 L CNN
-F 1 "LM741" H 7994 2205 50  0000 L CNN
-F 2 "" H 7700 2300 50  0001 C CNN
-F 3 "http://www.ti.com/lit/ds/symlink/lm741.pdf" H 7800 2400 50  0001 C CNN
-	1    7650 2250
+L Device:R R?
+U 1 1 60D2DC09
+P 6850 2150
+F 0 "R?" H 6920 2196 50  0000 L CNN
+F 1 "9.1M" H 6920 2105 50  0000 L CNN
+F 2 "" V 6780 2150 50  0001 C CNN
+F 3 "~" H 6850 2150 50  0001 C CNN
+	1    6850 2150
 	1    0    0    -1  
 $EndComp
+$Comp
+L Device:R R?
+U 1 1 60D2E3DA
+P 6850 2750
+F 0 "R?" H 6920 2796 50  0000 L CNN
+F 1 "2.4M" H 6920 2705 50  0000 L CNN
+F 2 "" V 6780 2750 50  0001 C CNN
+F 3 "~" H 6850 2750 50  0001 C CNN
+	1    6850 2750
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 60D33DBD
+P 4100 2150
+F 0 "R?" H 4170 2196 50  0000 L CNN
+F 1 "9.1M" H 4170 2105 50  0000 L CNN
+F 2 "" V 4030 2150 50  0001 C CNN
+F 3 "~" H 4100 2150 50  0001 C CNN
+	1    4100 2150
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 60D33DC3
+P 4100 2750
+F 0 "R?" H 4170 2796 50  0000 L CNN
+F 1 "2.4M" H 4170 2705 50  0000 L CNN
+F 2 "" V 4030 2750 50  0001 C CNN
+F 3 "~" H 4100 2750 50  0001 C CNN
+	1    4100 2750
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 60D3650D
+P 4100 4350
+F 0 "R?" H 4170 4396 50  0000 L CNN
+F 1 "9.1M" H 4170 4305 50  0000 L CNN
+F 2 "" V 4030 4350 50  0001 C CNN
+F 3 "~" H 4100 4350 50  0001 C CNN
+	1    4100 4350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 60D36513
+P 4100 4950
+F 0 "R?" H 4170 4996 50  0000 L CNN
+F 1 "2.4M" H 4170 4905 50  0000 L CNN
+F 2 "" V 4030 4950 50  0001 C CNN
+F 3 "~" H 4100 4950 50  0001 C CNN
+	1    4100 4950
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 60D39649
+P 6850 4350
+F 0 "R?" H 6920 4396 50  0000 L CNN
+F 1 "9.1M" H 6920 4305 50  0000 L CNN
+F 2 "" V 6780 4350 50  0001 C CNN
+F 3 "~" H 6850 4350 50  0001 C CNN
+	1    6850 4350
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R?
+U 1 1 60D3964F
+P 6850 4950
+F 0 "R?" H 6920 4996 50  0000 L CNN
+F 1 "2.4M" H 6920 4905 50  0000 L CNN
+F 2 "" V 6780 4950 50  0001 C CNN
+F 3 "~" H 6850 4950 50  0001 C CNN
+	1    6850 4950
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6850 1900 6850 2000
+Wire Wire Line
+	6000 1900 6850 1900
+Wire Wire Line
+	4100 2000 4900 2000
+Wire Wire Line
+	6850 4100 6850 4200
+Wire Wire Line
+	6000 4100 6850 4100
+Wire Wire Line
+	4100 4200 4900 4200
+Wire Wire Line
+	4100 4500 4100 4650
+Wire Wire Line
+	6850 4500 6850 4650
+Wire Wire Line
+	6850 2600 6850 2450
+Wire Wire Line
+	4100 2600 4100 2450
+$Comp
+L power:GND #PWR?
+U 1 1 60D45E2D
+P 4100 3050
+F 0 "#PWR?" H 4100 2800 50  0001 C CNN
+F 1 "GND" H 4105 2877 50  0000 C CNN
+F 2 "" H 4100 3050 50  0001 C CNN
+F 3 "" H 4100 3050 50  0001 C CNN
+	1    4100 3050
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 60D46448
+P 4100 5250
+F 0 "#PWR?" H 4100 5000 50  0001 C CNN
+F 1 "GND" H 4105 5077 50  0000 C CNN
+F 2 "" H 4100 5250 50  0001 C CNN
+F 3 "" H 4100 5250 50  0001 C CNN
+	1    4100 5250
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 60D475DF
+P 6850 5250
+F 0 "#PWR?" H 6850 5000 50  0001 C CNN
+F 1 "GND" H 6855 5077 50  0000 C CNN
+F 2 "" H 6850 5250 50  0001 C CNN
+F 3 "" H 6850 5250 50  0001 C CNN
+	1    6850 5250
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR?
+U 1 1 60D479C5
+P 6850 3050
+F 0 "#PWR?" H 6850 2800 50  0001 C CNN
+F 1 "GND" H 6855 2877 50  0000 C CNN
+F 2 "" H 6850 3050 50  0001 C CNN
+F 3 "" H 6850 3050 50  0001 C CNN
+	1    6850 3050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4100 3050 4100 2900
+Wire Wire Line
+	6850 2900 6850 3050
+Wire Wire Line
+	6850 5100 6850 5250
+Wire Wire Line
+	4100 5250 4100 5100
+Wire Wire Line
+	3900 2450 4100 2450
+Connection ~ 4100 2450
+Wire Wire Line
+	4100 2450 4100 2300
+Wire Wire Line
+	3900 4650 4100 4650
+Connection ~ 4100 4650
+Wire Wire Line
+	4100 4650 4100 4800
+Wire Wire Line
+	7050 4650 6850 4650
+Connection ~ 6850 4650
+Wire Wire Line
+	6850 4650 6850 4800
+Wire Wire Line
+	7050 2450 6850 2450
+Connection ~ 6850 2450
+Wire Wire Line
+	6850 2450 6850 2300
 $EndSCHEMATC
