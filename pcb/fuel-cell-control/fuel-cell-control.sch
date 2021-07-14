@@ -72,26 +72,6 @@ F41 "DD" O L 6200 1900 50
 F42 "DB" O L 6200 1700 50 
 F43 "DA" O L 6200 1600 50 
 $EndSheet
-Wire Wire Line
-	4950 1600 4000 1600
-Wire Wire Line
-	4000 1700 4950 1700
-Wire Wire Line
-	4950 1800 4000 1800
-Wire Wire Line
-	4000 1900 4950 1900
-Wire Wire Line
-	4000 2450 6200 2450
-Wire Wire Line
-	4000 2550 6200 2550
-Wire Wire Line
-	4000 2650 6200 2650
-Wire Wire Line
-	4000 2850 6200 2850
-Wire Wire Line
-	4000 2750 6200 2750
-Wire Wire Line
-	4000 2950 6200 2950
 $Comp
 L eec:AP3502FMTR-G1 D?
 U 1 1 60D559AB
@@ -401,8 +381,6 @@ F 3 "" H 3250 3650 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	2600 3450 2600 3500
-Wire Wire Line
 	2600 3500 3250 3500
 Wire Wire Line
 	3250 3500 3250 3650
@@ -412,4 +390,26 @@ Wire Wire Line
 	2600 1150 3250 1150
 Wire Wire Line
 	3250 1150 3250 1000
+Wire Wire Line
+	2600 3400 2600 3500
+Wire Wire Line
+	4000 1900 6200 1900
+Wire Wire Line
+	4000 1800 6200 1800
+Wire Wire Line
+	4000 1700 6200 1700
+Wire Wire Line
+	4000 1600 6200 1600
+Wire Wire Line
+	4000 2950 6200 2950
+Wire Wire Line
+	4000 2750 6200 2750
+Wire Wire Line
+	4000 2850 6200 2850
+Wire Wire Line
+	4000 2650 6200 2650
+Wire Wire Line
+	4000 2550 6200 2550
+Wire Wire Line
+	4000 2450 6200 2450
 $EndSCHEMATC
