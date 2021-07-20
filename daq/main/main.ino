@@ -68,15 +68,18 @@ void loop() {
   Serial.print("V\t");
   for (int i = 1; i < 16; ++i){
     volVals[i] = muxVals[i] - muxVals[i-1];
+    Serial.print(i);
+    Serial.print(': ')
     Serial.print((float)volVals[i]);
     Serial.print("V\t");
     
   }
 
-  //debug LED
+  // Debug LED - 
   digitalWrite(13, led);
   led = !led;
   
+  // Getting derivatives
   Serial.print(led);
   minIndex = get_min(volVals, 16);
   minVol = volVals[minIndex];
@@ -84,39 +87,36 @@ void loop() {
   avgVol = get_avg(volVals, 16);
   qsort(rawVals, 16, sizeof(int), compar);
   
-  Serial.print("\t");
-  Serial.print("\n");
+  Serial.println("\t");
 
   Serial.print("min: ");
   Serial.print(minVol);
-  Serial.print("\n");
+  Serial.print("\ton cell ");
+  Serial.println(minIndex);
 
   Serial.print("total: ");
-  Serial.print(totalVol);
-  Serial.print("\n");
+  Serial.println(totalVol);
 
   Serial.print("average: ");
-  Serial.print(avgVol);
-  Serial.print("\n");
+  Serial.println(avgVol);
 
   Serial.print("raw max: ");
-  Serial.print(rawVals[15]);
-  Serial.print("\n");
+  Serial.println(rawVals[15]);
 
   if (Serial.available()){
-    Serial.print("serial received");
+    Serial.print("serial received - ");
     unsigned char killMe = Serial.read();
     
-    if (killMe == 49){
-      Serial.println("Start is read");
+    if (killMe == '1'){
+      Serial.println("Starting");
       start = true;
       error = false;
       first = true;
       analogWrite(SMALLPUMP, PAS); // 30%
       digitalWrite(RELAY, LOW); 
     }
-    else if (killMe == 48){
-      Serial.println("Stop is read");
+    else if (killMe == '0'){
+      Serial.println("Stopping");
       start = false;
       digitalWrite(SMALLPUMP, LOW);
       digitalWrite(RELAY, HIGH);
