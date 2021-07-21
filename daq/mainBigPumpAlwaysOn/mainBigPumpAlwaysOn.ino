@@ -48,14 +48,15 @@ void setup() {
 
   analogWrite(SMALLPUMP, PAS);
   digitalWrite(RELAY, LOW);
+  digitalWrite(BIGPUMP, HIGH);
   
-  Serial1.begin(9600);
+  //Serial1.begin(9600);
+  Serial.begin(9600);
 
 }
 
 // the loop function runs over and over again forever
 void loop() {
-  //delay(2000);
   for (uint8_t muxSel = 0; muxSel < 16; muxSel ++){
     digitalWrite(MUX_SEL_0, muxSel & 1);
     digitalWrite(MUX_SEL_1, (muxSel & 2) >> 1);
@@ -66,16 +67,26 @@ void loop() {
     rawVals[muxSel] = analogRead(MUX_OUT);
     muxVals[muxSel] = (float)rawVals[muxSel] / 1023 * 16.921;
   }
-  Serial1.write(12);
+  //Serial1.write(12);
+  Serial.write(12);
   qsort(muxVals, 16, sizeof (float), compar);
   volVals[0] = muxVals[0];
-  Serial1.print((float)volVals[0]);
-  Serial1.print("\t");
+  //Serial1.print("0: ");
+  Serial.print("0: ");
+  //Serial1.print((float)volVals[0]);
+  Serial.print((float)volVals[0]);
+  //Serial1.print("V\t");
+  Serial.print("V\t");
   for (int i = 1; i < 16; ++i){
     volVals[i] = muxVals[i] - muxVals[i-1];
-    Serial1.print((float)volVals[i]);
-    //Serial11.print("V     ");
-    Serial1.print("\t"); 
+    //Serial1.print(i);
+    Serial.print(i);
+    //Serial1.print(": ");
+    Serial.print(": ");
+    //Serial1.print((float)volVals[i]);
+    Serial.print((float)volVals[i]);
+    //Serial1.print("V     ");
+    Serial.print("V     "); 
   }
 
   // Debug LED - 
@@ -83,7 +94,8 @@ void loop() {
   led = !led;
   
   // Getting derivatives
-  Serial1.print(led);
+  //Serial1.print(led);
+  Serial.print(led);
   minIndex = get_min(volVals, 16);
   minVol = volVals[minIndex];
   totalVol = get_total(volVals,  16);
@@ -91,37 +103,92 @@ void loop() {
   qsort(rawVals, 16, sizeof(int), compar);
   
   rawCurrent = analogRead(HE_1);
-  Serial1.println("\t");
+  //finalCurrent = rawCurrent / 1023 * 3.3;
+  
+  //Serial1.println("\t");
 
-  Serial1.print("m ");
-  Serial1.print(minVol);
-  Serial1.print(" c");
-  Serial1.println(minIndex);
+  //Serial1.print("min: ");
+  //Serial1.print(minVol);
+  //Serial1.print("\ton cell ");
+  //Serial1.println(minIndex);
 
-  Serial1.print("t ");
-  Serial1.println(totalVol);
+  //Serial1.print("total: ");
+  //Serial1.println(totalVol);
 
-  Serial1.print("a ");
-  Serial1.println(avgVol);
+  //Serial1.print("average: ");
+  //Serial1.println(avgVol);
 
-  if (Serial1.available()){
-    Serial1.print("Serial11 received - ");
-    unsigned char killMe = Serial1.read();
+  //Serial1.print("raw max: ");
+  //Serial1.println(rawVals[15]);
+  
+  //Serial1.print("raw current: ");
+  //Serial1.println(rawCurrent);
+
+  Serial.println("\t");
+
+  Serial.print("min: ");
+  Serial.print(minVol);
+  Serial.print("\ton cell ");
+  Serial.println(minIndex);
+
+  Serial.print("total: ");
+  Serial.println(totalVol);
+
+  Serial.print("average: ");
+  Serial.println(avgVol);
+
+  Serial.print("raw max: ");
+  Serial.println(rawVals[15]);
+  
+  Serial.print("raw current: ");
+  Serial.println(rawCurrent);
+  
+//
+//  if (Serial1.available()){
+//    Serial1.print("Serial1 received - ");
+//    unsigned char killMe = Serial1.read();
+//    
+//    if (killMe == '1'){
+//      Serial1.println("Starting");
+//      start = true;
+//      error = false;
+//      first = true;
+//      analogWrite(SMALLPUMP, PAS); // 30%
+//      digitalWrite(RELAY, LOW); 
+//    }
+//    else if (killMe == '0'){
+//      Serial1.println("Stopping");
+//      start = false;
+//      digitalWrite(SMALLPUMP, LOW);
+//      digitalWrite(RELAY, HIGH);
+//      digitalWrite(BIGPUMP, HIGH);
+//      bigPump = false;
+//    }
+//    
+//    delay(1000);
+//  } 
+
+  digitalWrite(bigPump, HIGH);
+  
+  if (Serial.available()){
+    Serial.print("Serial1 received - ");
+    unsigned char killMe = Serial.read();
     
     if (killMe == '1'){
-      Serial1.println("Starting");
+      Serial.println("Starting");
       start = true;
       error = false;
       first = true;
       analogWrite(SMALLPUMP, PAS); // 30%
       digitalWrite(RELAY, LOW); 
+      digitalWrite(BIGPUMP, HIGH);
     }
     else if (killMe == '0'){
-      Serial1.println("Stopping");
+      Serial.println("Stopping");
       start = false;
       digitalWrite(SMALLPUMP, LOW);
       digitalWrite(RELAY, HIGH);
-      digitalWrite(BIGPUMP, LOW);
+      digitalWrite(BIGPUMP, HIGH);
       bigPump = false;
     }
     
@@ -133,21 +200,25 @@ void loop() {
     if (!first){
       // control logic
       if (error) {
+        //Serial1.print("-ERROR- IN ERROR STATE Voltage: ");
+        //Serial1.print(errVol);
+        //Serial1.print(" Cell: ");
+        //Serial1.print(errCell);
 
-        Serial1.print("Err ");
-        Serial1.print(errVol);
-        Serial1.print(" C");
-        Serial1.print(errCell);
+        Serial.print("-ERROR- IN ERROR STATE Voltage: ");
+        Serial.print(errVol);
+        Serial.print(" Cell: ");
+        Serial.print(errCell);
         return;
       } 
 
       // Pump logic
-      if (!bigPump && minVol < 0.7 ) {
+      if (/*!bigPump &&*/ minVol < 0.7 ) {
         digitalWrite(BIGPUMP, HIGH);
         bigPump = true;
       } else if (bigPump, minVol > 0.75) {
         bigPump = false;
-        digitalWrite(BIGPUMP, LOW);
+        digitalWrite(BIGPUMP, HIGH);
       }
       
       if ( minVol < 0.5 ) {
@@ -155,7 +226,8 @@ void loop() {
         digitalWrite(SMALLPUMP, LOW);
         digitalWrite(BIGPUMP, LOW);
         bigPump = false;
-        Serial1.print("Err");
+        //Serial1.print("-ERROR- Minimum voltage is lower than 0.5V");
+        Serial.print("-ERROR- Minimum voltage is lower than 0.5V");
         errVol = minVol;
         errCell = minIndex;
         error = true;
@@ -167,11 +239,14 @@ void loop() {
       //digitalWrite(SMALLPUMP, HIGH);
       analogWrite(SMALLPUMP, PAS); // 30%
       digitalWrite(RELAY, LOW);
-      Serial1.println("in");
+      digitalWrite(BIGPUMP, HIGH);
+      //Serial1.println("In init");
+      Serial.println("In init");
     }
     
   } else {
-      Serial1.println("St");
+      //Serial1.println("Stopped");
+      Serial.println("Stopped");
   }
   
 }
