@@ -1,5 +1,0 @@
-(sym_lib_table
-  (lib (name CD74HCT4051M)(type Legacy)(uri ${KIPRJMOD}/fuel-cell-control-library/CD74HCT4051M.lib)(options "")(descr ""))
-  (lib (name SamacSys_Parts)(type Legacy)(uri ${KIPRJMOD}/fuel-cell-control-library/mux/SamacSys_Parts.lib)(options "")(descr ""))
-  (lib (name eec)(type Legacy)(uri ${KIPRJMOD}/fuel-cell-control-library/buck/eec.lib)(options "")(descr ""))
-)
