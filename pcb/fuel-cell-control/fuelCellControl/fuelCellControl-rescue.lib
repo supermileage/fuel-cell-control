@@ -1,0 +1,49 @@
+EESchema-LIBRARY Version 2.4
+#encoding utf-8
+#
+# MUX506IDWR-dk_Interface-Analog-Switches-Multiplexers-Demultiplexers
+#
+DEF MUX506IDWR-dk_Interface-Analog-Switches-Multiplexers-Demultiplexers U 0 40 Y Y 1 F N
+F0 "U" -100 950 60 H V C CNN
+F1 "MUX506IDWR-dk_Interface-Analog-Switches-Multiplexers-Demultiplexers" 700 -1300 60 H V C CNN
+F2 "" 700 200 60 H I L CNN
+F3 "" 700 300 60 H I L CNN
+F4 "296-47544-1-ND" 700 400 60 H I L CNN "Digi-Key_PN"
+F5 "Integrated Circuits (ICs)" 700 600 60 H I L CNN "Category"
+F6 "Interface - Analog Switches, Multiplexers, Demultiplexers" 700 700 60 H I L CNN "Family"
+F7 "http://www.ti.com/general/docs/suppproductinfo.tsp?distId=10&gotoUrl=http%3A%2F%2Fwww.ti.com%2Flit%2Fgpn%2Fcd74hc4067" 700 800 60 H I L CNN "DK_Datasheet_Link"
+F8 "/product-detail/en/texas-instruments/CD74HC4067M96/296-29408-1-ND/2741760" 700 900 60 H I L CNN "DK_Detail_Page"
+F9 "IC MUX/DEMUX 1X16 24SOIC" 700 1000 60 H I L CNN "Description"
+F10 "Texas Instruments" 700 1100 60 H I L CNN "Manufacturer"
+F11 "Active" 700 1200 60 H I L CNN "Status"
+DRAW
+S -200 900 300 -1000 0 1 0 f
+X VDD 1 100 1100 200 D 50 50 1 1 W
+X S10 10 -400 -200 200 R 50 50 1 1 B
+X S9 11 -400 -100 200 R 50 50 1 1 B
+X GND 12 100 -1200 200 U 50 50 1 1 W
+X A3 14 500 300 200 L 50 50 1 1 I
+X A2 15 500 400 200 L 50 50 1 1 I
+X A1 16 500 500 200 L 50 50 1 1 I
+X A0 17 500 600 200 L 50 50 1 1 I
+X EN 18 -400 -900 200 R 50 50 1 1 I
+X S1 19 -400 700 200 R 50 50 1 1 B
+X S2 20 -400 600 200 R 50 50 1 1 B
+X S3 21 -400 500 200 R 50 50 1 1 B
+X S4 22 -400 400 200 R 50 50 1 1 B
+X S5 23 -400 300 200 R 50 50 1 1 B
+X S6 24 -400 200 200 R 50 50 1 1 B
+X S7 25 -400 100 200 R 50 50 1 1 B
+X S8 26 -400 0 200 R 50 50 1 1 B
+X VSS 27 250 1100 200 D 50 50 1 1 W
+X D 28 -400 800 200 R 50 50 1 1 B
+X S16 4 -400 -800 200 R 50 50 1 1 B
+X S15 5 -400 -700 200 R 50 50 1 1 B
+X S14 6 -400 -600 200 R 50 50 1 1 B
+X S13 7 -400 -500 200 R 50 50 1 1 B
+X S12 8 -400 -400 200 R 50 50 1 1 B
+X S11 9 -400 -300 200 R 50 50 1 1 B
+ENDDRAW
+ENDDEF
+#
+#End Library
