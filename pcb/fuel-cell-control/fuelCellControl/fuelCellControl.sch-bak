@@ -708,18 +708,6 @@ F 3 "" H 2150 2950 50  0001 C CNN
 	1    2150 2950
 	1    0    0    -1  
 $EndComp
-$Comp
-L Device:Q_NMOS_GSD Q2
-U 1 1 61A65E9B
-P 2050 2750
-F 0 "Q2" H 2300 2700 50  0000 L CNN
-F 1 "Q_NMOS_GDS" H 2300 2800 50  0000 L CNN
-F 2 "Package_TO_SOT_SMD:SOT-323_SC-70" H 2250 2850 50  0001 C CNN
-F 3 "https://www.diodes.com/assets/Datasheets/ds30934.pdf" H 2050 2750 50  0001 C CNN
-F 4 "DMN2004WKDICT-ND" H 2050 2750 50  0001 C CNN "DigikeyPN"
-	1    2050 2750
-	1    0    0    -1  
-$EndComp
 Text Label 1700 2750 2    50   ~ 0
 BigPump
 $Comp
@@ -733,7 +721,6 @@ F 3 "~" H 2350 2550 50  0001 C CNN
 	1    2150 2550
 	1    0    0    -1  
 $EndComp
-Connection ~ 2150 2550
 $Comp
 L Device:R R2
 U 1 1 61A65EB0
@@ -800,18 +787,6 @@ F 1 "GND" H 3855 2777 50  0000 C CNN
 F 2 "" H 3850 2950 50  0001 C CNN
 F 3 "" H 3850 2950 50  0001 C CNN
 	1    3850 2950
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:Q_NMOS_GSD Q3
-U 1 1 61A6D341
-P 3750 2750
-F 0 "Q3" H 4000 2700 50  0000 L CNN
-F 1 "Q_NMOS_GDS" H 4000 2800 50  0000 L CNN
-F 2 "Package_TO_SOT_SMD:SOT-323_SC-70" H 3950 2850 50  0001 C CNN
-F 3 "https://www.diodes.com/assets/Datasheets/ds30934.pdf" H 3750 2750 50  0001 C CNN
-F 4 "DMN2004WKDICT-ND" H 3750 2750 50  0001 C CNN "DigikeyPN"
-	1    3750 2750
 	1    0    0    -1  
 $EndComp
 Text Label 3400 2750 2    50   ~ 0
@@ -1105,8 +1080,8 @@ U 1 1 617F4C2D
 P 1800 4250
 F 0 "Q1" H 2050 4200 50  0000 L CNN
 F 1 "Q_NMOS_GDS" H 2050 4300 50  0000 L CNN
-F 2 "Package_TO_SOT_SMD:SOT-323_SC-70" H 2000 4350 50  0001 C CNN
-F 3 "https://www.diodes.com/assets/Datasheets/ds30934.pdf" H 1800 4250 50  0001 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-89-3" H 2000 4350 50  0001 C CNN
+F 3 "https://www.diodes.com/assets/Datasheets/ZXMN3A01Z.pdf" H 1800 4250 50  0001 C CNN
 F 4 "DMN2004WKDICT-ND" H 1800 4250 50  0001 C CNN "DigikeyPN"
 	1    1800 4250
 	1    0    0    -1  
@@ -1229,4 +1204,29 @@ $EndComp
 Wire Wire Line
 	9000 3750 9000 3800
 Connection ~ 9000 3800
+$Comp
+L Device:Q_NMOS_GSD Q2
+U 1 1 61A880C3
+P 2050 2750
+F 0 "Q2" H 2300 2700 50  0000 L CNN
+F 1 "Q_NMOS_GDS" H 2300 2800 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-89-3" H 2250 2850 50  0001 C CNN
+F 3 "https://www.diodes.com/assets/Datasheets/ZXMN3A01Z.pdf" H 2050 2750 50  0001 C CNN
+F 4 "DMN2004WKDICT-ND" H 2050 2750 50  0001 C CNN "DigikeyPN"
+	1    2050 2750
+	1    0    0    -1  
+$EndComp
+Connection ~ 2150 2550
+$Comp
+L Device:Q_NMOS_GSD Q3
+U 1 1 61A891E7
+P 3750 2750
+F 0 "Q3" H 4000 2700 50  0000 L CNN
+F 1 "Q_NMOS_GDS" H 4000 2800 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-89-3" H 3950 2850 50  0001 C CNN
+F 3 "https://www.diodes.com/assets/Datasheets/ZXMN3A01Z.pdf" H 3750 2750 50  0001 C CNN
+F 4 "DMN2004WKDICT-ND" H 3750 2750 50  0001 C CNN "DigikeyPN"
+	1    3750 2750
+	1    0    0    -1  
+$EndComp
 $EndSCHEMATC
