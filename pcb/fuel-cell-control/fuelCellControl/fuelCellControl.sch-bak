@@ -14,18 +14,6 @@ Comment3 ""
 Comment4 ""
 $EndDescr
 $Comp
-L Regulator_Linear:MCP1754S-3302xCB U1
-U 1 1 6174AE03
-P 3000 1000
-F 0 "U1" H 3000 1242 50  0000 C CNN
-F 1 "MCP1754S-3302xCB" H 3000 1151 50  0000 C CNN
-F 2 "Package_TO_SOT_SMD:SOT-23" H 3000 1225 50  0001 C CNN
-F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/20002276C.pdf" H 3000 1000 50  0001 C CNN
-F 4 "MCP1754ST-3302E/CBCT-ND" H 3000 1000 50  0001 C CNN "DigikeyPN"
-	1    3000 1000
-	1    0    0    -1  
-$EndComp
-$Comp
 L MCU_Module:Arduino_Nano_Every A1
 U 1 1 617DB298
 P 6900 4100
@@ -49,16 +37,16 @@ F 3 "" H 6900 5500 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	6900 5100 6900 5500
+	6900 5100 6900 5450
 $Comp
 L power:GND #PWR010
 U 1 1 617E0879
-P 3000 1400
-F 0 "#PWR010" H 3000 1150 50  0001 C CNN
-F 1 "GND" H 3005 1227 50  0000 C CNN
-F 2 "" H 3000 1400 50  0001 C CNN
-F 3 "" H 3000 1400 50  0001 C CNN
-	1    3000 1400
+P 7800 3250
+F 0 "#PWR010" H 7800 3000 50  0001 C CNN
+F 1 "GND" H 7805 3077 50  0000 C CNN
+F 2 "" H 7800 3250 50  0001 C CNN
+F 3 "" H 7800 3250 50  0001 C CNN
+	1    7800 3250
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -94,7 +82,11 @@ F 0 "R5" H 8620 4446 50  0000 L CNN
 F 1 "430k" H 8620 4355 50  0000 L CNN
 F 2 "Resistor_SMD:R_0603_1608Metric" V 8480 4400 50  0001 C CNN
 F 3 "https://www.bourns.com/docs/product-datasheets/cr.pdf?sfvrsn=574d41f6_14" H 8550 4400 50  0001 C CNN
-F 4 "CR0603-JW-434ELFCT-ND" H 8550 4400 50  0001 C CNN "DigikeyPN"
+F 4 "‎RMCF0603FT430KCT-ND‎" H 8550 4400 50  0001 C CNN "DigikeyPN"
+F 5 "RMCF0603FT430K" H 8550 4400 50  0001 C CNN "MPN"
+F 6 "https://www.digikey.ca/en/products/detail/RMCF0603FT430K/RMCF0603FT430KCT-ND/6052969?itemSeq=383441807" H 8550 4400 50  0001 C CNN "DK_Detail_Page"
+F 7 "RES 430K OHM 1% 1/10W 0603" H 8550 4400 50  0001 C CNN "Description"
+F 8 "Stackpole Electronics Inc" H 8550 4400 50  0001 C CNN "Manufacturer"
 	1    8550 4400
 	1    0    0    -1  
 $EndComp
@@ -127,72 +119,57 @@ Wire Wire Line
 $Comp
 L Connector:Conn_01x02_Male J1
 U 1 1 6186EB87
-P 800 1250
-F 0 "J1" H 908 1431 50  0000 C CNN
-F 1 "InputPower" H 908 1340 50  0000 C CNN
-F 2 "Connector_Molex:Molex_Mini-Fit_Jr_5569-02A2_2x01_P4.20mm_Horizontal" H 800 1250 50  0001 C CNN
-F 3 "https://www.molex.com/pdm_docs/ps/PS-5556-001.pdf" H 800 1250 50  0001 C CNN
-F 4 "0050361758-ND" H 800 1250 50  0001 C CNN "DigikeyPN"
-	1    800  1250
+P 850 1600
+F 0 "J1" H 958 1781 50  0000 C CNN
+F 1 "InputPower" H 958 1690 50  0000 C CNN
+F 2 "Connector_Molex:Molex_Mini-Fit_Jr_5569-02A2_2x01_P4.20mm_Horizontal" H 850 1600 50  0001 C CNN
+F 3 "https://www.molex.com/pdm_docs/ps/PS-5556-001.pdf" H 850 1600 50  0001 C CNN
+F 4 "0050361758-ND" H 850 1600 50  0001 C CNN "DigikeyPN"
+	1    850  1600
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	3000 1300 3000 1350
 $Comp
 L power:GND #PWR02
 U 1 1 618789AA
-P 1150 1500
-F 0 "#PWR02" H 1150 1250 50  0001 C CNN
-F 1 "GND" H 1155 1327 50  0000 C CNN
-F 2 "" H 1150 1500 50  0001 C CNN
-F 3 "" H 1150 1500 50  0001 C CNN
-	1    1150 1500
+P 1200 1850
+F 0 "#PWR02" H 1200 1600 50  0001 C CNN
+F 1 "GND" H 1205 1677 50  0000 C CNN
+F 2 "" H 1200 1850 50  0001 C CNN
+F 3 "" H 1200 1850 50  0001 C CNN
+	1    1200 1850
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	1000 1350 1150 1350
+	1050 1700 1200 1700
 Wire Wire Line
-	1150 1350 1150 1450
+	1200 1700 1200 1800
 Wire Wire Line
-	1000 1250 1150 1250
+	1050 1600 1200 1600
 $Comp
 L power:PWR_FLAG #FLG01
 U 1 1 6187D89B
-P 1150 800
-F 0 "#FLG01" H 1150 875 50  0001 C CNN
-F 1 "PWR_FLAG" V 1150 928 50  0000 L CNN
-F 2 "" H 1150 800 50  0001 C CNN
-F 3 "~" H 1150 800 50  0001 C CNN
-	1    1150 800 
+P 1200 1150
+F 0 "#FLG01" H 1200 1225 50  0001 C CNN
+F 1 "PWR_FLAG" V 1200 1278 50  0000 L CNN
+F 2 "" H 1200 1150 50  0001 C CNN
+F 3 "~" H 1200 1150 50  0001 C CNN
+	1    1200 1150
 	0    1    1    0   
 $EndComp
 $Comp
 L power:PWR_FLAG #FLG02
 U 1 1 6187E001
-P 1150 1450
-F 0 "#FLG02" H 1150 1525 50  0001 C CNN
-F 1 "PWR_FLAG" V 1150 1578 50  0000 L CNN
-F 2 "" H 1150 1450 50  0001 C CNN
-F 3 "~" H 1150 1450 50  0001 C CNN
-	1    1150 1450
+P 1200 1800
+F 0 "#FLG02" H 1200 1875 50  0001 C CNN
+F 1 "PWR_FLAG" V 1200 1928 50  0000 L CNN
+F 2 "" H 1200 1800 50  0001 C CNN
+F 3 "~" H 1200 1800 50  0001 C CNN
+	1    1200 1800
 	0    1    1    0   
 $EndComp
-Connection ~ 1150 1450
+Connection ~ 1200 1800
 Wire Wire Line
-	1150 1450 1150 1500
-Wire Wire Line
-	2500 1000 2700 1000
-$Comp
-L power:+5V #PWR013
-U 1 1 618803DE
-P 3750 1000
-F 0 "#PWR013" H 3750 850 50  0001 C CNN
-F 1 "+5V" H 3765 1173 50  0000 C CNN
-F 2 "" H 3750 1000 50  0001 C CNN
-F 3 "" H 3750 1000 50  0001 C CNN
-	1    3750 1000
-	1    0    0    -1  
-$EndComp
+	1200 1800 1200 1850
 $Comp
 L power:+5V #PWR015
 U 1 1 618817AF
@@ -230,18 +207,16 @@ Wire Wire Line
 	8550 1300 8550 3800
 Wire Wire Line
 	9850 3800 9850 4150
-Wire Wire Line
-	3300 1000 3550 1000
 $Comp
 L Device:Fuse F1
 U 1 1 618EA324
-P 1150 950
-F 0 "F1" H 1210 996 50  0000 L CNN
-F 1 "Fuse" H 1210 905 50  0000 L CNN
-F 2 "digikey-footprints:3586KTR" V 1080 950 50  0001 C CNN
-F 3 "https://www.digikey.ca/en/products/detail/keystone-electronics/3586KTR/6817755?s=N4IgTCBcDaIMwFYAcA2A1gFwE4gLoF8g" H 1150 950 50  0001 C CNN
-F 4 "36-3586KCT-ND" H 1150 950 50  0001 C CNN "DigikeyPN"
-	1    1150 950 
+P 1200 1300
+F 0 "F1" H 1260 1346 50  0000 L CNN
+F 1 "Fuse" H 1260 1255 50  0000 L CNN
+F 2 "digikey-footprints:3586KTR" V 1130 1300 50  0001 C CNN
+F 3 "https://www.digikey.ca/en/products/detail/keystone-electronics/3586KTR/6817755?s=N4IgTCBcDaIMwFYAcA2A1gFwE4gLoF8g" H 1200 1300 50  0001 C CNN
+F 4 "36-3586KCT-ND" H 1200 1300 50  0001 C CNN "DigikeyPN"
+	1    1200 1300
 	1    0    0    -1  
 $EndComp
 Text Label 5750 4200 2    50   ~ 0
@@ -249,31 +224,25 @@ Relay
 $Comp
 L Connector:TestPoint TP5
 U 1 1 6190EBDF
-P 3550 1000
-F 0 "TP5" H 3492 1026 50  0000 R CNN
-F 1 "5V" H 3492 1117 50  0000 R CNN
-F 2 "Connector_PinSocket_2.54mm:PinSocket_1x01_P2.54mm_Vertical" H 3750 1000 50  0001 C CNN
-F 3 "~" H 3750 1000 50  0001 C CNN
-	1    3550 1000
-	-1   0    0    1   
+P 7100 3100
+F 0 "TP5" H 7042 3126 50  0000 R CNN
+F 1 "5V" H 7042 3217 50  0000 R CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x01_P2.54mm_Vertical" H 7300 3100 50  0001 C CNN
+F 3 "~" H 7300 3100 50  0001 C CNN
+	1    7100 3100
+	0    1    1    0   
 $EndComp
-Connection ~ 3550 1000
-Wire Wire Line
-	3550 1000 3750 1000
 $Comp
 L Connector:TestPoint TP3
 U 1 1 61910C0C
-P 2200 1000
-F 0 "TP3" H 2450 1050 50  0000 R CNN
-F 1 "12V" H 2450 1150 50  0000 R CNN
-F 2 "Connector_PinSocket_2.54mm:PinSocket_1x01_P2.54mm_Vertical" H 2400 1000 50  0001 C CNN
-F 3 "~" H 2400 1000 50  0001 C CNN
-	1    2200 1000
-	-1   0    0    1   
+P 1200 1050
+F 0 "TP3" H 1450 1100 50  0000 R CNN
+F 1 "12V" H 1450 1200 50  0000 R CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x01_P2.54mm_Vertical" H 1400 1050 50  0001 C CNN
+F 3 "~" H 1400 1050 50  0001 C CNN
+	1    1200 1050
+	0    -1   -1   0   
 $EndComp
-Wire Wire Line
-	2200 1000 2400 1000
-Connection ~ 2500 1000
 $Comp
 L Connector:TestPoint TP7
 U 1 1 619664F1
@@ -291,10 +260,13 @@ L Connector:Conn_01x15_Male J2
 U 1 1 619EB417
 P 1100 6800
 F 0 "J2" H 1350 7750 50  0000 C CNN
-F 1 "Conn_01x15_Male" H 1400 7650 50  0000 C CNN
+F 1 "Conn_01x15_Female" H 1400 7650 50  0000 C CNN
 F 2 "Connector_PinSocket_2.54mm:PinSocket_1x15_P2.54mm_Vertical" H 1100 6800 50  0001 C CNN
-F 3 "https://media.digikey.com/pdf/Data%20Sheets/Sullins%20PDFs/Female_Headers.100_DS.pdf" H 1100 6800 50  0001 C CNN
-F 4 "S7013-ND" H 1100 6800 50  0001 C CNN "DigikeyPN"
+F 3 "https://www.digikey.ca/en/products/detail/310-87-115-41-001101/1212-1103-ND/3757353" H 1100 6800 50  0001 C CNN
+F 4 "1212-1103-ND" H 1100 6800 50  0001 C CNN "DigikeyPN"
+F 5 "310-87-115-41-001101" H 1100 6800 50  0001 C CNN "MPN"
+F 6 "CONN SOCKET 15POS 0.1 GOLD PCB" H 1100 6800 50  0001 C CNN "Description"
+F 7 "Preci-Dip" H 1100 6800 50  0001 C CNN "Manufacturer"
 	1    1100 6800
 	1    0    0    -1  
 $EndComp
@@ -311,10 +283,14 @@ L Connector:Conn_01x15_Male J5
 U 1 1 619F3030
 P 2700 6800
 F 0 "J5" H 3050 5850 50  0000 R CNN
-F 1 "Conn_01x15_Male" H 3300 5950 50  0000 R CNN
+F 1 "Conn_01x15_Female" H 3300 5950 50  0000 R CNN
 F 2 "Connector_PinSocket_2.54mm:PinSocket_1x15_P2.54mm_Vertical" H 2700 6800 50  0001 C CNN
-F 3 "https://media.digikey.com/pdf/Data%20Sheets/Sullins%20PDFs/Female_Headers.100_DS.pdf" H 2700 6800 50  0001 C CNN
-F 4 "S7013-ND" H 2700 6800 50  0001 C CNN "DigikeyPN"
+F 3 "https://www.digikey.ca/en/products/detail/310-87-115-41-001101/1212-1103-ND/3757353" H 2700 6800 50  0001 C CNN
+F 4 "1212-1103-ND" H 2700 6800 50  0001 C CNN "DigikeyPN"
+F 5 "https://www.digikey.ca/en/products/detail/310-87-115-41-001101/1212-1103-ND/3757353" H 2700 6800 50  0001 C CNN "DK_Detail_Page"
+F 6 "310-87-115-41-001101" H 2700 6800 50  0001 C CNN "MPN"
+F 7 "CONN SOCKET 15POS 0.1 GOLD PCB" H 2700 6800 50  0001 C CNN "Description"
+F 8 "Preci-Dip" H 2700 6800 50  0001 C CNN "Manufacturer"
 	1    2700 6800
 	-1   0    0    1   
 $EndComp
@@ -449,53 +425,38 @@ Nano3V3Out
 $Comp
 L Connector:TestPoint TP4
 U 1 1 61A7F380
-P 3000 1400
-F 0 "TP4" V 2954 1588 50  0000 L CNN
-F 1 "GND" V 3045 1588 50  0000 L CNN
-F 2 "Connector_PinSocket_2.54mm:PinSocket_1x01_P2.54mm_Vertical" H 3200 1400 50  0001 C CNN
-F 3 "~" H 3200 1400 50  0001 C CNN
-	1    3000 1400
+P 6900 5450
+F 0 "TP4" V 6854 5638 50  0000 L CNN
+F 1 "GND" V 6945 5638 50  0000 L CNN
+F 2 "Connector_PinSocket_2.54mm:PinSocket_1x01_P2.54mm_Vertical" H 7100 5450 50  0001 C CNN
+F 3 "~" H 7100 5450 50  0001 C CNN
+	1    6900 5450
 	0    1    1    0   
 $EndComp
-Connection ~ 3000 1400
 $Comp
 L Device:C C1
 U 1 1 61AEC261
-P 2400 1200
-F 0 "C1" H 2515 1246 50  0000 L CNN
-F 1 "1uF" H 2515 1155 50  0000 L CNN
-F 2 "Capacitor_SMD:C_0603_1608Metric" H 2438 1050 50  0001 C CNN
-F 3 "https://search.murata.co.jp/Ceramy/image/img/A01X/G101/ENG/GRT188R61H105KE13-01.pdf" H 2400 1200 50  0001 C CNN
-F 4 "490-12330-1-ND" H 2400 1200 50  0001 C CNN "DigikeyPN"
-	1    2400 1200
+P 1850 1100
+F 0 "C1" H 1965 1146 50  0000 L CNN
+F 1 "1uF" H 1965 1055 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 1888 950 50  0001 C CNN
+F 3 "https://search.murata.co.jp/Ceramy/image/img/A01X/G101/ENG/GRT188R61H105KE13-01.pdf" H 1850 1100 50  0001 C CNN
+F 4 "490-12330-1-ND" H 1850 1100 50  0001 C CNN "DigikeyPN"
+	1    1850 1100
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	2400 1000 2400 1050
-Connection ~ 2400 1000
-Wire Wire Line
-	2400 1000 2500 1000
-Wire Wire Line
-	2400 1350 3000 1350
-Connection ~ 3000 1350
-Wire Wire Line
-	3000 1350 3000 1400
 $Comp
 L Device:C C2
 U 1 1 61B01389
-P 3300 1150
-F 0 "C2" H 3418 1196 50  0000 L CNN
-F 1 "1uF" H 3418 1105 50  0000 L CNN
-F 2 "Capacitor_SMD:C_0603_1608Metric" H 3338 1000 50  0001 C CNN
-F 3 "https://search.murata.co.jp/Ceramy/image/img/A01X/G101/ENG/GRT188R61H105KE13-01.pdf" H 3300 1150 50  0001 C CNN
-F 4 "490-12330-1-ND" H 3300 1150 50  0001 C CNN "DigikeyPN"
-	1    3300 1150
+P 7800 3100
+F 0 "C2" H 7918 3146 50  0000 L CNN
+F 1 "1uF" H 7918 3055 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 7838 2950 50  0001 C CNN
+F 3 "https://search.murata.co.jp/Ceramy/image/img/A01X/G101/ENG/GRT188R61H105KE13-01.pdf" H 7800 3100 50  0001 C CNN
+F 4 "490-12330-1-ND" H 7800 3100 50  0001 C CNN "DigikeyPN"
+	1    7800 3100
 	1    0    0    -1  
 $EndComp
-Connection ~ 3300 1000
-Wire Wire Line
-	3000 1300 3300 1300
-Connection ~ 3000 1300
 $Comp
 L Device:C C3
 U 1 1 61B08669
@@ -505,7 +466,8 @@ F 1 "0.1uF" H 10818 805 50  0000 L CNN
 F 2 "Capacitor_SMD:C_0603_1608Metric" H 10738 700 50  0001 C CNN
 F 3 "https://www.yageo.com/upload/media/product/productsearch/datasheet/mlcc/UPY-GPHC_Y5V_6.3V-to-50V_11.pdf" H 10700 850 50  0001 C CNN
 F 4 "311-1343-1-ND" H 10700 850 50  0001 C CNN "DigikeyPN"
-F 5 "https://www.digikey.ca/en/products/detail/yageo/CC0603ZRY5V9BB104/2103081" H 10700 850 50  0001 C CNN "DK_Details_Page"
+F 5 "" H 10700 850 50  0001 C CNN "DK_Details_Page"
+F 6 "https://www.digikey.ca/en/products/detail/yageo/CC0603ZRY5V9BB104/2103081" H 10700 850 50  0001 C CNN "DK_Detail_Page"
 	1    10700 850 
 	1    0    0    -1  
 $EndComp
@@ -547,15 +509,16 @@ F 0 "U3" H 10900 1300 60  0000 C CNN
 F 1 "MUX506IDWR" H 10900 1200 60  0000 C CNN
 F 2 "digikey-footprints:SOIC-28_W7.5mm" H 10950 2300 60  0001 L CNN
 F 3 "https://www.ti.com/lit/ds/symlink/mux506.pdf" H 10950 2400 60  0001 L CNN
-F 4 "296-47544-1-ND" H 10950 2500 60  0001 L CNN "Digi-Key_PN"
-F 5 "" H 10950 2600 60  0001 L CNN "MPN"
+F 4 "" H 10950 2500 60  0001 L CNN "Digi-Key_PN"
+F 5 "MUX506IDWR" H 10950 2600 60  0001 L CNN "MPN"
 F 6 "Integrated Circuits (ICs)" H 10950 2700 60  0001 L CNN "Category"
 F 7 "Interface - Analog Switches, Multiplexers, Demultiplexers" H 10950 2800 60  0001 L CNN "Family"
-F 8 "http://www.ti.com/general/docs/suppproductinfo.tsp?distId=10&gotoUrl=http%3A%2F%2Fwww.ti.com%2Flit%2Fgpn%2Fcd74hc4067" H 10950 2900 60  0001 L CNN "DK_Datasheet_Link"
-F 9 "/product-detail/en/texas-instruments/CD74HC4067M96/296-29408-1-ND/2741760" H 10950 3000 60  0001 L CNN "DK_Detail_Page"
-F 10 "IC MUX/DEMUX 1X16 24SOIC" H 10950 3100 60  0001 L CNN "Description"
+F 8 "https://www.ti.com/lit/ds/symlink/mux506.pdf" H 10950 2900 60  0001 L CNN "DK_Datasheet_Link"
+F 9 "https://www.digikey.ca/en/products/detail/texas-instruments/MUX506IDWR/7931879?s=N4IgTCBcDa4JwDYC0AWA7AVhSpBGJAcgCIgC6AvkA" H 10950 3000 60  0001 L CNN "DK_Detail_Page"
+F 10 "IC SWITCH SINGLE 28SOIC" H 10950 3100 60  0001 L CNN "Description"
 F 11 "Texas Instruments" H 10950 3200 60  0001 L CNN "Manufacturer"
 F 12 "Active" H 10950 3300 60  0001 L CNN "Status"
+F 13 "296-47544-1-ND" H 10250 2100 50  0001 C CNN "DigikeyPN"
 	1    10250 2100
 	1    0    0    -1  
 $EndComp
@@ -627,15 +590,16 @@ F 0 "U4" H 10900 4150 60  0000 C CNN
 F 1 "MUX506IDWR" H 10900 4050 60  0000 C CNN
 F 2 "digikey-footprints:SOIC-28_W7.5mm" H 10950 5150 60  0001 L CNN
 F 3 "https://www.ti.com/lit/ds/symlink/mux506.pdf" H 10950 5250 60  0001 L CNN
-F 4 "296-47544-1-ND" H 10950 5350 60  0001 L CNN "Digi-Key_PN"
-F 5 "" H 10950 5450 60  0001 L CNN "MPN"
+F 4 "" H 10950 5350 60  0001 L CNN "Digi-Key_PN"
+F 5 "MUX506IDWR" H 10950 5450 60  0001 L CNN "MPN"
 F 6 "Integrated Circuits (ICs)" H 10950 5550 60  0001 L CNN "Category"
 F 7 "Interface - Analog Switches, Multiplexers, Demultiplexers" H 10950 5650 60  0001 L CNN "Family"
-F 8 "http://www.ti.com/general/docs/suppproductinfo.tsp?distId=10&gotoUrl=http%3A%2F%2Fwww.ti.com%2Flit%2Fgpn%2Fcd74hc4067" H 10950 5750 60  0001 L CNN "DK_Datasheet_Link"
-F 9 "/product-detail/en/texas-instruments/CD74HC4067M96/296-29408-1-ND/2741760" H 10950 5850 60  0001 L CNN "DK_Detail_Page"
-F 10 "IC MUX/DEMUX 1X16 24SOIC" H 10950 5950 60  0001 L CNN "Description"
+F 8 "https://www.ti.com/lit/ds/symlink/mux506.pdf" H 10950 5750 60  0001 L CNN "DK_Datasheet_Link"
+F 9 "https://www.digikey.ca/en/products/detail/texas-instruments/MUX506IDWR/7931879?s=N4IgTCBcDa4JwDYC0AWA7AVhSpBGJAcgCIgC6AvkA" H 10950 5850 60  0001 L CNN "DK_Detail_Page"
+F 10 "IC SWITCH SINGLE 28SOIC" H 10950 5950 60  0001 L CNN "Description"
 F 11 "Texas Instruments" H 10950 6050 60  0001 L CNN "Manufacturer"
 F 12 "Active" H 10950 6150 60  0001 L CNN "Status"
+F 13 "296-47544-1-ND" H 10250 4950 50  0001 C CNN "DigikeyPN"
 	1    10250 4950
 	1    0    0    -1  
 $EndComp
@@ -730,7 +694,7 @@ F 1 "1.5k" H 2100 2950 50  0000 R CNN
 F 2 "Resistor_SMD:R_0603_1608Metric" V 1730 2900 50  0001 C CNN
 F 3 "https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocNm=1773204&DocType=DS&DocLang=English" H 1800 2900 50  0001 C CNN
 F 4 "A121524CT-ND" H 1800 2900 50  0001 C CNN "DigikeyPN"
-F 5 "https://www.digikey.ca/en/products/detail/te-connectivity-passive-product/CRG0603F1K5/2380739" H 1800 2900 50  0001 C CNN "DK_Details_Page"
+F 5 "https://www.digikey.ca/en/products/detail/te-connectivity-passive-product/CRG0603F1K5/2380739" H 1800 2900 50  0001 C CNN "DK_Detail_Page"
 	1    1800 2900
 	-1   0    0    1   
 $EndComp
@@ -812,7 +776,7 @@ F 1 "1.5k" H 3900 2950 50  0000 R CNN
 F 2 "Resistor_SMD:R_0603_1608Metric" V 3430 2900 50  0001 C CNN
 F 3 "https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocNm=1773204&DocType=DS&DocLang=English" H 3500 2900 50  0001 C CNN
 F 4 "A121524CT-ND" H 3500 2900 50  0001 C CNN "DigikeyPN"
-F 5 "https://www.digikey.ca/en/products/detail/te-connectivity-passive-product/CRG0603F1K5/2380739" H 3500 2900 50  0001 C CNN "DK_Details_Page"
+F 5 "https://www.digikey.ca/en/products/detail/te-connectivity-passive-product/CRG0603F1K5/2380739" H 3500 2900 50  0001 C CNN "DK_Detail_Page"
 	1    3500 2900
 	-1   0    0    1   
 $EndComp
@@ -879,12 +843,12 @@ Wire Wire Line
 $Comp
 L power:+12V #PWR01
 U 1 1 618E7A04
-P 1150 800
-F 0 "#PWR01" H 1150 650 50  0001 C CNN
-F 1 "+12V" H 1165 973 50  0000 C CNN
-F 2 "" H 1150 800 50  0001 C CNN
-F 3 "" H 1150 800 50  0001 C CNN
-	1    1150 800 
+P 1200 800
+F 0 "#PWR01" H 1200 650 50  0001 C CNN
+F 1 "+12V" H 1215 973 50  0000 C CNN
+F 2 "" H 1200 800 50  0001 C CNN
+F 3 "" H 1200 800 50  0001 C CNN
+	1    1200 800 
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -935,17 +899,17 @@ $EndComp
 $Comp
 L power:+12V #PWR09
 U 1 1 618EB760
-P 2500 1000
-F 0 "#PWR09" H 2500 850 50  0001 C CNN
-F 1 "+12V" H 2515 1173 50  0000 C CNN
-F 2 "" H 2500 1000 50  0001 C CNN
-F 3 "" H 2500 1000 50  0001 C CNN
-	1    2500 1000
+P 6800 2600
+F 0 "#PWR09" H 6800 2450 50  0001 C CNN
+F 1 "+12V" H 6815 2773 50  0000 C CNN
+F 2 "" H 6800 2600 50  0001 C CNN
+F 3 "" H 6800 2600 50  0001 C CNN
+	1    6800 2600
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	1150 1100 1150 1250
-Connection ~ 1150 800 
+	1200 1450 1200 1600
+Connection ~ 1200 1150
 Text Label 2500 6200 2    50   ~ 0
 GND
 $Comp
@@ -1056,7 +1020,7 @@ F 1 "1.5k" H 1950 4450 50  0000 R CNN
 F 2 "Resistor_SMD:R_0603_1608Metric" V 1480 4400 50  0001 C CNN
 F 3 "https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocNm=1773204&DocType=DS&DocLang=English" H 1550 4400 50  0001 C CNN
 F 4 "A121524CT-ND" H 1550 4400 50  0001 C CNN "DigikeyPN"
-F 5 "https://www.digikey.ca/en/products/detail/te-connectivity-passive-product/CRG0603F1K5/2380739" H 1550 4400 50  0001 C CNN "DK_Details_Page"
+F 5 "https://www.digikey.ca/en/products/detail/te-connectivity-passive-product/CRG0603F1K5/2380739" H 1550 4400 50  0001 C CNN "DK_Detail_Page"
 	1    1550 4400
 	-1   0    0    1   
 $EndComp
@@ -1098,7 +1062,7 @@ F 3 "" H 1900 4450 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
-	7100 2750 7100 3100
+	7100 2750 7100 2950
 Wire Wire Line
 	9000 4650 9000 4850
 $Comp
@@ -1111,18 +1075,6 @@ F 2 "Resistor_SMD:R_0603_1608Metric" V 8930 3950 50  0001 C CNN
 F 3 "https://www.yageo.com/upload/media/product/productsearch/datasheet/rchip/PYu-RC_Group_51_RoHS_L_11.pdf" H 9000 3950 50  0001 C CNN
 F 4 "311-820KHRCT-ND" H 9000 3950 50  0001 C CNN "DigikeyPN"
 	1    9000 3950
-	1    0    0    -1  
-$EndComp
-$Comp
-L Device:R R7
-U 1 1 619D8631
-P 9000 4500
-F 0 "R7" H 9070 4546 50  0000 L CNN
-F 1 "430k" H 9070 4455 50  0000 L CNN
-F 2 "Resistor_SMD:R_0603_1608Metric" V 8930 4500 50  0001 C CNN
-F 3 "https://www.bourns.com/docs/product-datasheets/cr.pdf?sfvrsn=574d41f6_14" H 9000 4500 50  0001 C CNN
-F 4 "CR0603-JW-434ELFCT-ND" H 9000 4500 50  0001 C CNN "DigikeyPN"
-	1    9000 4500
 	1    0    0    -1  
 $EndComp
 Wire Wire Line
@@ -1178,7 +1130,8 @@ F 1 "0.1uF" H 10918 3655 50  0000 L CNN
 F 2 "Capacitor_SMD:C_0603_1608Metric" H 10838 3550 50  0001 C CNN
 F 3 "https://www.yageo.com/upload/media/product/productsearch/datasheet/mlcc/UPY-GPHC_Y5V_6.3V-to-50V_11.pdf" H 10800 3700 50  0001 C CNN
 F 4 "311-1343-1-ND" H 10800 3700 50  0001 C CNN "DigikeyPN"
-F 5 "https://www.digikey.ca/en/products/detail/yageo/CC0603ZRY5V9BB104/2103081" H 10800 3700 50  0001 C CNN "DK_Details_Page"
+F 5 "" H 10800 3700 50  0001 C CNN "DK_Details_Page"
+F 6 "https://www.digikey.ca/en/products/detail/yageo/CC0603ZRY5V9BB104/2103081" H 10800 3700 50  0001 C CNN "DK_Detail_Page"
 	1    10800 3700
 	1    0    0    -1  
 $EndComp
@@ -1227,6 +1180,54 @@ F 2 "Package_TO_SOT_SMD:SOT-89-3" H 3950 2850 50  0001 C CNN
 F 3 "https://www.diodes.com/assets/Datasheets/ZXMN3A01Z.pdf" H 3750 2750 50  0001 C CNN
 F 4 "DMN2004WKDICT-ND" H 3750 2750 50  0001 C CNN "DigikeyPN"
 	1    3750 2750
+	1    0    0    -1  
+$EndComp
+Connection ~ 7100 3100
+Connection ~ 6900 5450
+Wire Wire Line
+	6900 5450 6900 5500
+Wire Wire Line
+	7100 2950 7800 2950
+Connection ~ 7100 2950
+Wire Wire Line
+	7100 2950 7100 3100
+Wire Wire Line
+	1200 1150 1200 1050
+Connection ~ 1200 1050
+Wire Wire Line
+	1200 1050 1200 950 
+Wire Wire Line
+	1850 950  1200 950 
+Connection ~ 1200 950 
+Wire Wire Line
+	1200 950  1200 800 
+Wire Wire Line
+	1850 1250 1850 1450
+$Comp
+L power:GND #PWR0101
+U 1 1 61A459C0
+P 1850 1450
+F 0 "#PWR0101" H 1850 1200 50  0001 C CNN
+F 1 "GND" H 1855 1277 50  0000 C CNN
+F 2 "" H 1850 1450 50  0001 C CNN
+F 3 "" H 1850 1450 50  0001 C CNN
+	1    1850 1450
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R7
+U 1 1 61A34484
+P 9000 4500
+F 0 "R7" H 9070 4546 50  0000 L CNN
+F 1 "430k" H 9070 4455 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 8930 4500 50  0001 C CNN
+F 3 "https://www.bourns.com/docs/product-datasheets/cr.pdf?sfvrsn=574d41f6_14" H 9000 4500 50  0001 C CNN
+F 4 "‎RMCF0603FT430KCT-ND‎" H 9000 4500 50  0001 C CNN "DigikeyPN"
+F 5 "RMCF0603FT430K" H 9000 4500 50  0001 C CNN "MPN"
+F 6 "https://www.digikey.ca/en/products/detail/RMCF0603FT430K/RMCF0603FT430KCT-ND/6052969?itemSeq=383441807" H 9000 4500 50  0001 C CNN "DK_Detail_Page"
+F 7 "RES 430K OHM 1% 1/10W 0603" H 9000 4500 50  0001 C CNN "Description"
+F 8 "Stackpole Electronics Inc" H 9000 4500 50  0001 C CNN "Manufacturer"
+	1    9000 4500
 	1    0    0    -1  
 $EndComp
 $EndSCHEMATC
