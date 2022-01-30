@@ -2,6 +2,8 @@
 #define BIG_PUMP 9
 #define LITTLE_PUMP 10
 
+#define PUMP_PWM 255
+
 #define MUX_SEL_0 4
 #define MUX_SEL_1 5
 #define MUX_SEL_2 6
@@ -24,6 +26,10 @@ bool led = LOW;
 bool bigPump = false;
 bool initializing = true;
 
+bool start = true;
+bool first = false;
+bool error = false;
+
 void setup() {
   // put your setup code here, to run once:
   pinMode(LITTLE_PUMP, OUTPUT);
@@ -40,16 +46,22 @@ void setup() {
   
   pinMode(LED, OUTPUT);
 
-  digitalWrite(RELAY, HIGH);
+  digitalWrite(RELAY, LOW);
   digitalWrite(BIG_PUMP, LOW);
-  digitalWrite(LITTLE_PUMP, LOW);
+  analogWrite(LITTLE_PUMP, PUMP_PWM);
   
-  Serial1.begin(9600);
+  Serial.begin(9600);
+  //Serial.print("Hello");
 
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
+  // Debug LED
+  digitalWrite(LED, led);
+  led = !led;
+  //delay(1000);
+  //Serial.print("test");
 
   // Iterate through each mux to get an analog reading
   for(uint8_t muxSel = 0; muxSel < 16; muxSel++){
@@ -58,7 +70,7 @@ void loop() {
     digitalWrite(MUX_SEL_2, (muxSel & 4) >> 2);
     digitalWrite(MUX_SEL_3, (muxSel & 8) >> 3);
 
-    //note previous code needed some delay, so we may need a delay here
+    //note: previous code needed some delay, so we may need a delay here
     
     rawVals[muxSel] = analogRead(MUX_OUT_1);
     muxVals[muxSel] = (float) rawVals[muxSel] / 1023 * voltage_divider;
@@ -73,6 +85,13 @@ void loop() {
   //this allows us to plug in the cells in any order
   qsort(muxVals,NUM_CELLS, sizeof (float), compar);
 
+//print raw values for debugging purposes
+  Serial.println("raw");
+  for (int i = 0; i < NUM_CELLS; i++){
+    Serial.print((float)muxVals[i]);
+    Serial.print("\t");
+  }  
+  Serial.println("vol");
   // calculate voltage values of each individual cell
   volVals[0] = muxVals[0];
   Serial.print((float)volVals[0]);
@@ -82,11 +101,7 @@ void loop() {
     volVals[i] = muxVals[i] - muxVals[i-1];
     Serial.print((float)volVals[i]);
     Serial.print("\t");
-  }
-
-  // Debug LED
-  digitalWrite(LED, led);
-  led = !led;
+  }  
 
   // get min, avg and total voltage values
   float volMin = volVals[0];
@@ -95,6 +110,7 @@ void loop() {
   int count = 0;
   int minIndex = 0;
 
+  // calculate averages, total, minimums etc...
   for (int i = 0; i < NUM_CELLS; i++){
     volTotal += volVals[i];
     count++;
@@ -108,9 +124,10 @@ void loop() {
   volAvg = volTotal / count;
   
   // print info:
+  Serial.print("\n");
   Serial.print("m ");
-  Serial.print(volMin);
-  Serial.print(" c");
+  Serial.println(volMin);
+  Serial.print("i ");
   Serial.println(minIndex);
 
   Serial.print("t ");
@@ -119,28 +136,83 @@ void loop() {
   Serial.print("a ");
   Serial.println(volAvg);
 
-  // control logic
-  if(!initializing){
-    //add error state here
-
-
-    // if voltage is too low, turn on big pump until voltage exceeds a threshold 
-    if (!bigPump && volMin < 0.7 ) {
+  //check if user has entered information into the serial monitor
+   if (Serial.available()){
+    Serial.print("Serial received - ");
+    unsigned char modeSwitch = Serial.read();
+    
+    if (modeSwitch == '1'){
+      Serial.println("Starting");
+      start = true;
+      error = false;
+      initializing = true;
+      analogWrite(LITTLE_PUMP, PUMP_PWM); // 30%
+      digitalWrite(RELAY, LOW); 
+    }
+    else if (modeSwitch == '0'){
+      Serial.println("Stopping");
+      start = false;
+      digitalWrite(LITTLE_PUMP, LOW);
+      digitalWrite(RELAY, HIGH);
+      digitalWrite(BIG_PUMP, LOW);
+      bigPump = false;
+    }
+    // todo: have other options and label them better
+    else if(modeSwitch == '2'){
+      Serial.println("Big Pump High");
       digitalWrite(BIG_PUMP, HIGH);
       bigPump = true;
-    } else if (bigPump, volMin > 0.75) {
-      bigPump = false;
-      digitalWrite(BIG_PUMP, LOW);
     }
-
-
-  } else if (volTotal > 12) {
-      initializing = false;
-      delay(3000);
-  } else{
-    // turn on pump here
+    else if(modeSwitch == '3'){
+      Serial.println("Big Pump low");
+      digitalWrite(BIG_PUMP, LOW);
+      bigPump = false;
+    }
     
+    delay(1000);
+  } 
+
+  
+  // control logic
+  // check if it is in the initialization state 
+  // todo change this into a more clear state machine --> initialization state, error state, start/stop state
+  if(start){
+    if(!initializing){
+      //add error state here
+      if(error){
+        Serial.print("Error");
+        //add more stuff here
+        return;
+      }
+
+
+      // if voltage is too low, turn on big pump until voltage exceeds a threshold 
+      if (!bigPump && volMin < 0.7 ) {
+        digitalWrite(BIG_PUMP, HIGH);
+        bigPump = true;
+      } else if (bigPump, volMin > 0.75) {
+        bigPump = false;
+        digitalWrite(BIG_PUMP, LOW);
+      }
+
+      //todo add when voltage is less that 0.5 error
+
+      
+    } // wait until capacitor charges up to 12 Volts
+    else if (volTotal > 12) {
+        initializing = false;
+        delay(3000);
+    } 
+    else{
+      // initialization state
+      analogWrite(LITTLE_PUMP, PUMP_PWM);
+    }
   }
+  //stop state
+  else{
+    Serial.println("Stop state");
+  }
+  
 
 
 }
