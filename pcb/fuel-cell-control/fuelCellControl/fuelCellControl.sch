@@ -1230,4 +1230,6 @@ F 8 "Stackpole Electronics Inc" H 9000 4500 50  0001 C CNN "Manufacturer"
 	1    9000 4500
 	1    0    0    -1  
 $EndComp
+Text Notes 2400 4050 0    50   ~ 0
+TODO: Fix mosfet - footprint to schematic is wrong
 $EndSCHEMATC

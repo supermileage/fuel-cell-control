@@ -12,7 +12,7 @@
 #define MUX_OUT_1 A0
 #define MUX_OUT_2 A1
 
-#define NUM_CELLS 19
+#define NUM_CELLS 20
 
 #define LED 13
 
@@ -20,7 +20,7 @@ float muxVals[NUM_CELLS] = {};
 float volVals[NUM_CELLS] = {};
 int rawVals[NUM_CELLS] = {};
 
-float voltage_divider = 16.921; //TODO: calculate value
+float voltage_divider = 5.0*(820+430)/430; ////14.53
 bool led = LOW;
 
 bool bigPump = false;
@@ -29,6 +29,10 @@ bool initializing = true;
 bool start = true;
 bool first = false;
 bool error = false;
+
+bool debugging = false;
+
+bool one_pump = false;
 
 void setup() {
   // put your setup code here, to run once:
@@ -60,7 +64,7 @@ void loop() {
   // Debug LED
   digitalWrite(LED, led);
   led = !led;
-  //delay(1000);
+  delay(1000); //add when debugging to view values easily
   //Serial.print("test");
 
   // Iterate through each mux to get an analog reading
@@ -72,36 +76,55 @@ void loop() {
 
     //note: previous code needed some delay, so we may need a delay here
     
+    // get mux readings and convert them to 1
     rawVals[muxSel] = analogRead(MUX_OUT_1);
     muxVals[muxSel] = (float) rawVals[muxSel] / 1023 * voltage_divider;
 
     // add values from second mux to the array
-    if (muxSel < NUM_CELLS - 16){ 
+    if (muxSel < NUM_CELLS - 16){ //only need the space for the number of pins there are
       rawVals[muxSel+16] = analogRead(MUX_OUT_2);
-      muxVals[muxSel+16] = (float) rawVals[muxSel] / 1023 * voltage_divider;
+      muxVals[muxSel+16] = (float) rawVals[muxSel+16] / 1023 * voltage_divider;
     } 
   }
+  //print raw unsorted for debugging each individual pin
+  if(debugging){
+    //Serial.println("raw and unsorted");
+    for (int i = 0; i < NUM_CELLS; i++){
+    Serial.print(muxVals[i]);
+    Serial.print("\t");
+  }  
+  Serial.println("\n");
+  }
+
+
   //sort muxes in order of smallest to largest
   //this allows us to plug in the cells in any order
   qsort(muxVals,NUM_CELLS, sizeof (float), compar);
 
-//print raw values for debugging purposes
-  Serial.println("raw");
-  for (int i = 0; i < NUM_CELLS; i++){
-    Serial.print((float)muxVals[i]);
-    Serial.print("\t");
-  }  
-  Serial.println("vol");
-  // calculate voltage values of each individual cell
+////print raw values for debugging purposes
+  // Serial.println("\nraw");
+  // for (int i = 0; i < NUM_CELLS; i++){
+  //   Serial.print((float)muxVals[i]);
+  //   Serial.print("\t");
+  // }  
+  
+  //calculate voltage values of each individual cell
   volVals[0] = muxVals[0];
-  Serial.print((float)volVals[0]);
-  Serial.print("\t");
+  if(!debugging){
+    Serial.println("\nvol");
+    Serial.print((float)volVals[0]);
+    Serial.print("\t");
+  }
 
   for (int i = 1; i < NUM_CELLS; i++){
     volVals[i] = muxVals[i] - muxVals[i-1];
-    Serial.print((float)volVals[i]);
-    Serial.print("\t");
+    if(!debugging){
+      Serial.print((float)volVals[i]);
+      Serial.print("\t");
+    }
+    
   }  
+  // todo: find number of expected zeroes, based on number of cells plugged in, and ignore that number of zeroes
 
   // get min, avg and total voltage values
   float volMin = volVals[0];
@@ -124,17 +147,20 @@ void loop() {
   volAvg = volTotal / count;
   
   // print info:
-  Serial.print("\n");
-  Serial.print("m ");
-  Serial.println(volMin);
-  Serial.print("i ");
-  Serial.println(minIndex);
+  if(!debugging){
+    Serial.print("\n");
+    Serial.print("m ");
+    Serial.println(volMin);
+    Serial.print("i ");
+    Serial.println(minIndex);
 
-  Serial.print("t ");
-  Serial.println(volTotal);
+    Serial.print("t ");
+    Serial.println(volTotal);
 
-  Serial.print("a ");
-  Serial.println(volAvg);
+    Serial.print("a ");
+    Serial.println(volAvg);
+  }
+  
 
   //check if user has entered information into the serial monitor
    if (Serial.available()){
@@ -168,6 +194,21 @@ void loop() {
       digitalWrite(BIG_PUMP, LOW);
       bigPump = false;
     }
+
+    //determines what information is printed to serial, when debugging is true, we print the raw unsorted values
+    else if(modeSwitch == '4'){
+      debugging = true;
+    }
+    else if(modeSwitch == '5'){
+      debugging = false;
+    }
+    else if(modeSwitch == '6'){ //test pump pwm on little pump
+      for (int j=0; j<255; j++){
+        analogWrite(LITTLE_PUMP, j);
+        delay(10);
+      }
+
+    }
     
     delay(1000);
   } 
@@ -196,6 +237,14 @@ void loop() {
       }
 
       //todo add when voltage is less that 0.5 error
+      
+      if (volMin < 0.5){
+        digitalWrite(RELAY, HIGH);
+        digitalWrite(LITTLE_PUMP, LOW);
+        digitalWrite(BIG_PUMP, LOW);
+        error = true;
+        bigPump = false;
+      }
 
       
     } // wait until capacitor charges up to 12 Volts
