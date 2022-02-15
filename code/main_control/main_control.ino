@@ -133,8 +133,10 @@ void loop() {
   int count = 0;
   int minIndex = 0;
 
+  int expected_zeroes = 0
+
   // calculate averages, total, minimums etc...
-  for (int i = 0; i < NUM_CELLS; i++){
+  for (int i = expected_zeroes; i < NUM_CELLS; i++){
     volTotal += volVals[i];
     count++;
     
