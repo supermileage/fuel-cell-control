@@ -1,3 +1,13 @@
+/* Mode swich guide:
+ 0; Stop state
+ 1: Start state
+ 2: Big Pump On
+ 3: Big Pump Off
+ 4: Debugging = True, -> print the voltage values without sorting the cells
+ 5: Debugging = False, -> normal mode
+ 6: iterate through pwm of little pump 
+ */
+
 #define RELAY 8
 #define BIG_PUMP 9
 #define LITTLE_PUMP 10
@@ -74,7 +84,9 @@ void loop() {
     digitalWrite(MUX_SEL_2, (muxSel & 4) >> 2);
     digitalWrite(MUX_SEL_3, (muxSel & 8) >> 3);
 
-    //note: previous code needed some delay, so we may need a delay here
+    //delay is added here to take into account switching time between the muxes 
+    // Enable turn-on/off time is approxiamtely 150 ns each, will use 5ms to be safe 
+    delay(5)
     
     // get mux readings and convert them to 1
     rawVals[muxSel] = analogRead(MUX_OUT_1);
@@ -86,7 +98,7 @@ void loop() {
       muxVals[muxSel+16] = (float) rawVals[muxSel+16] / 1023 * voltage_divider;
     } 
   }
-  //print raw unsorted for debugging each individual pin
+  //print raw unsorted for debugging each individual pin of board
   if(debugging){
     //Serial.println("raw and unsorted");
     for (int i = 0; i < NUM_CELLS; i++){
@@ -186,13 +198,15 @@ void loop() {
       bigPump = false;
     }
     // todo: have other options and label them better
+
+    // 2 and 3 are for turning on and off big pump without affecting anything else in the system
     else if(modeSwitch == '2'){
       Serial.println("Big Pump High");
       digitalWrite(BIG_PUMP, HIGH);
       bigPump = true;
     }
     else if(modeSwitch == '3'){
-      Serial.println("Big Pump low");
+      Serial.println("Big Pump Low");
       digitalWrite(BIG_PUMP, LOW);
       bigPump = false;
     }
