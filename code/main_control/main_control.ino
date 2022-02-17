@@ -1,4 +1,4 @@
-/* Mode swich guide:
+/* Mode switch guide:
  0; Stop state
  1: Start state
  2: Big Pump On
@@ -44,6 +44,9 @@ bool debugging = false;
 
 bool one_pump = false;
 
+int errorCell = -1;
+float errorVol = 0;
+
 void setup() {
   // put your setup code here, to run once:
   pinMode(LITTLE_PUMP, OUTPUT);
@@ -86,7 +89,7 @@ void loop() {
 
     //delay is added here to take into account switching time between the muxes 
     // Enable turn-on/off time is approxiamtely 150 ns each, will use 5ms to be safe 
-    delay(5)
+    delay(5);
     
     // get mux readings and convert them to 1
     rawVals[muxSel] = analogRead(MUX_OUT_1);
@@ -145,7 +148,7 @@ void loop() {
   int count = 0;
   int minIndex = 0;
 
-  int expected_zeroes = 0
+  int expected_zeroes = 0;
 
   // calculate averages, total, minimums etc...
   for (int i = expected_zeroes; i < NUM_CELLS; i++){
@@ -237,8 +240,11 @@ void loop() {
     if(!initializing){
       //add error state here
       if(error){
-        Serial.print("Error");
-        //add more stuff here
+        Serial.println("Error");
+        Serial.print("Error Cell: ");
+        Serial.println(errorCell);
+        Serial.print("Error Voltage: ");
+        Serial.println(errorVol);
         return;
       }
 
@@ -260,6 +266,8 @@ void loop() {
         digitalWrite(BIG_PUMP, LOW);
         error = true;
         bigPump = false;
+        errorCell = minIndex;
+        errorVol = volMin;
       }
 
       
