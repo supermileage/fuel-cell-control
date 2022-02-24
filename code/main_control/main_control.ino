@@ -1,6 +1,6 @@
 /* Mode switch guide:
- 0; Stop state
- 1: Start state
+ 0; Stop state //big pump off, little pump off, relay on
+ 1: Start state // little pump on, relay off
  2: Big Pump On
  3: Big Pump Off
  4: Debugging = True, -> print the voltage values without sorting the cells
@@ -10,7 +10,7 @@
 
 #define RELAY 8
 #define BIG_PUMP 9
-#define LITTLE_PUMP 10
+#define LITTLE_PUMP 10 //temp fix //nvm
 
 #define PUMP_PWM 255
 
@@ -47,6 +47,9 @@ bool one_pump = false;
 int errorCell = -1;
 float errorVol = 0;
 
+float time = 0.0;
+int delay_time = 1000;
+
 void setup() {
   // put your setup code here, to run once:
   pinMode(LITTLE_PUMP, OUTPUT);
@@ -77,7 +80,7 @@ void loop() {
   // Debug LED
   digitalWrite(LED, led);
   led = !led;
-  delay(1000); //add when debugging to view values easily
+  delay(delay_time); //add when debugging to view values easily
   //Serial.print("test");
 
   // Iterate through each mux to get an analog reading
@@ -105,7 +108,7 @@ void loop() {
   if(debugging){
     //Serial.println("raw and unsorted");
     for (int i = 0; i < NUM_CELLS; i++){
-    Serial.print(muxVals[i]);
+    Serial.print(rawVals[i]);
     Serial.print("\t");
   }  
   Serial.println("\n");
@@ -142,16 +145,20 @@ void loop() {
   // todo: find number of expected zeroes, based on number of cells plugged in, and ignore that number of zeroes
 
   // get min, avg and total voltage values
-  float volMin = volVals[0];
+  //qsort(volVals,NUM_CELLS, sizeof (float), compar);
+  int trailing_zeros = 4;
+  int leading_zeros = 1;
+  //volVals[expected_zeroes] = muxVals[expected_zeroes];// takes into account the weird not exactly zero readings we have from a few cells
+
+  float volMin = volVals[trailing_zeros];
   float volTotal = 0;
   float volAvg = 0;
   int count = 0;
   int minIndex = 0;
 
-  int expected_zeroes = 0;
 
   // calculate averages, total, minimums etc...
-  for (int i = expected_zeroes; i < NUM_CELLS; i++){
+  for (int i = leading_zeros; i < NUM_CELLS - trailing_zeros; i++){
     volTotal += volVals[i];
     count++;
     
@@ -183,9 +190,11 @@ void loop() {
    if (Serial.available()){
     Serial.print("Serial received - ");
     unsigned char modeSwitch = Serial.read();
+    // todo print char here
     
     if (modeSwitch == '1'){
       Serial.println("Starting");
+      time = 0.0;
       start = true;
       error = false;
       initializing = true;
@@ -226,9 +235,21 @@ void loop() {
         analogWrite(LITTLE_PUMP, j);
         delay(10);
       }
-
     }
-    
+    //7 and 8 are for indivually testing the safety without turning on other pumps
+    else if(modeSwitch == '7'){
+      Serial.println("Relay Low");
+      digitalWrite(RELAY, LOW);
+    }
+    else if(modeSwitch == '8'){
+      Serial.println("Relay High");
+      digitalWrite(RELAY, HIGH);
+    }
+    //turn off little pump without turning on relay
+    else if(modeSwitch == '9'){
+      Serial.println("Little pump Low");
+      digitalWrite(LITTLE_PUMP, LOW);
+    }
     delay(1000);
   } 
 
@@ -258,7 +279,7 @@ void loop() {
         digitalWrite(BIG_PUMP, LOW);
       }
 
-      //todo add when voltage is less that 0.5 error
+      
       
       if (volMin < 0.5){
         digitalWrite(RELAY, HIGH);
@@ -272,12 +293,25 @@ void loop() {
 
       
     } // wait until capacitor charges up to 12 Volts
-    else if (volTotal > 12) {
+    else if (volMin > 0.75) {
         initializing = false;
-        delay(3000);
-    } 
+        //delay(2000);
+    }
+    // todo: add if still in initialization state
+    else if(time>15000){
+      digitalWrite(RELAY, HIGH);
+      digitalWrite(LITTLE_PUMP, LOW);
+      digitalWrite(BIG_PUMP, LOW);
+      error = true;
+      bigPump = false;
+      errorCell = minIndex;
+      errorVol = volMin;
+      Serial.println("stuck in intialization");
+    }
+    
     else{
       // initialization state
+      //time += delay_time; //comment this out to disable startup shutdown
       analogWrite(LITTLE_PUMP, PUMP_PWM);
     }
   }
@@ -295,4 +329,13 @@ int compar (const void* p1, const void* p2){
   if(*(float*)p1 == *(float*)p2) return 0;
   if(*(float*)p1 > *(float*)p2) return 1;
 }
+
+
+/*
+Notes from our session 2/23/2022, change the code to account for:
+- plan hard wire connection so we know what cells are what
+- ignore first 4 and last cell
+- should decend from 13-14ish down to 0.8 ish for the cells that we are not ignoring
+- purple wire on bottom left
+*/
 
