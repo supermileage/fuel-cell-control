@@ -26,6 +26,9 @@
 
 #define LED 13
 
+int leading_zeros = 4;
+int trailing_zeros = 1;
+
 float muxVals[NUM_CELLS] = {};
 float volVals[NUM_CELLS] = {};
 int rawVals[NUM_CELLS] = {};
@@ -107,7 +110,7 @@ void loop() {
   //print raw unsorted for debugging each individual pin of board
   if(debugging){
     //Serial.println("raw and unsorted");
-    for (int i = 0; i < NUM_CELLS; i++){
+    for (int i = leading_zeros; i < NUM_CELLS - trailing_zeros; i++){
     Serial.print(rawVals[i]);
     Serial.print("\t");
   }  
@@ -117,7 +120,7 @@ void loop() {
 
   //sort muxes in order of smallest to largest
   //this allows us to plug in the cells in any order
-  qsort(muxVals,NUM_CELLS, sizeof (float), compar);
+  //qsort(muxVals,NUM_CELLS, sizeof (float), compar); //don't sort, we will hard code cell positions
 
 ////print raw values for debugging purposes
   // Serial.println("\nraw");
@@ -127,15 +130,15 @@ void loop() {
   // }  
   
   //calculate voltage values of each individual cell
-  volVals[0] = muxVals[0];
+  volVals[NUM_CELLS-trailing_zeros] = muxVals[NUM_CELLS-trailing_zeros];
   if(!debugging){
     Serial.println("\nvol");
     Serial.print((float)volVals[0]);
     Serial.print("\t");
   }
 
-  for (int i = 1; i < NUM_CELLS; i++){
-    volVals[i] = muxVals[i] - muxVals[i-1];
+  for (int i = leading_zeros; i < NUM_CELLS-trailing_zeros-1; i++){
+    volVals[i] = muxVals[i] - muxVals[i+1];
     if(!debugging){
       Serial.print((float)volVals[i]);
       Serial.print("\t");
@@ -146,11 +149,10 @@ void loop() {
 
   // get min, avg and total voltage values
   //qsort(volVals,NUM_CELLS, sizeof (float), compar);
-  int trailing_zeros = 4;
-  int leading_zeros = 1;
+  
   //volVals[expected_zeroes] = muxVals[expected_zeroes];// takes into account the weird not exactly zero readings we have from a few cells
 
-  float volMin = volVals[trailing_zeros];
+  float volMin = volVals[leading_zeros];
   float volTotal = 0;
   float volAvg = 0;
   int count = 0;
@@ -250,6 +252,12 @@ void loop() {
       Serial.println("Little pump Low");
       digitalWrite(LITTLE_PUMP, LOW);
     }
+    else if(modeSwitch == 'a'){
+      Serial.println("Little pump High");
+      digitalWrite(LITTLE_PUMP, HIGH);
+    }
+
+
     delay(1000);
   } 
 
@@ -334,7 +342,7 @@ int compar (const void* p1, const void* p2){
 /*
 Notes from our session 2/23/2022, change the code to account for:
 - plan hard wire connection so we know what cells are what
-- ignore first 4 and last cell
+- ignore first 4 and last 1 cell
 - should decend from 13-14ish down to 0.8 ish for the cells that we are not ignoring
 - purple wire on bottom left
 */
