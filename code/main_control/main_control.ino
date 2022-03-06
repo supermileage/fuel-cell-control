@@ -350,7 +350,7 @@ void loop() {
       bigPump = false;
       errorCell = minIndex;
       errorVol = volMin;
-      Serial.println("stuck in intialization");
+      Serial.println("stuck in intial");
     }
     
     else{
@@ -364,8 +364,8 @@ void loop() {
     Serial.println("Stop state");
   }
   
-
-
+  //end character for sending data
+  Serial.print("*");
 }
 
 int compar (const void* p1, const void* p2){
