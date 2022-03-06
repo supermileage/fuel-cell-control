@@ -26,14 +26,14 @@
 
 #define LED 13
 
-int leading_zeros = 4;
-int trailing_zeros = 1;
+int leading_zeros = 4; //should be 4
+int trailing_zeros = 1; //should be 1? or maybe 2 - probably 1
 
 float muxVals[NUM_CELLS] = {};
 float volVals[NUM_CELLS] = {};
 int rawVals[NUM_CELLS] = {};
 
-float voltage_divider = 5.0*(820+430)/430; ////14.53
+float voltage_divider = 5.0*(820+430)/427; ////14.54 //need to calibrate properly
 bool led = LOW;
 
 bool bigPump = false;
@@ -52,6 +52,9 @@ float errorVol = 0;
 
 float time = 0.0;
 int delay_time = 1000;
+
+bool read_last_volt = false;
+float last_reading = 0.0;
 
 void setup() {
   // put your setup code here, to run once:
@@ -111,7 +114,7 @@ void loop() {
   if(debugging){
     //Serial.println("raw and unsorted");
     for (int i = leading_zeros; i < NUM_CELLS - trailing_zeros; i++){
-    Serial.print(rawVals[i]);
+    Serial.print(muxVals[i]);
     Serial.print("\t");
   }  
   Serial.println("\n");
@@ -130,12 +133,12 @@ void loop() {
   // }  
   
   //calculate voltage values of each individual cell
-  volVals[NUM_CELLS-trailing_zeros] = muxVals[NUM_CELLS-trailing_zeros];
+  /*volVals[NUM_CELLS-trailing_zeros] = muxVals[NUM_CELLS-trailing_zeros];
   if(!debugging){
     Serial.println("\nvol");
-    Serial.print((float)volVals[0]);
+    //Serial.print((float)volVals[0]);
     Serial.print("\t");
-  }
+  }*/
 
   for (int i = leading_zeros; i < NUM_CELLS-trailing_zeros-1; i++){
     volVals[i] = muxVals[i] - muxVals[i+1];
@@ -145,6 +148,12 @@ void loop() {
     }
     
   }  
+  volVals[NUM_CELLS-trailing_zeros-1] = muxVals[NUM_CELLS-trailing_zeros-1];
+  if(!debugging){
+    //Serial.println("\nvol");
+    Serial.print((float)volVals[NUM_CELLS-trailing_zeros-1]);
+    Serial.print("\t");
+  }
   // todo: find number of expected zeroes, based on number of cells plugged in, and ignore that number of zeroes
 
   // get min, avg and total voltage values
@@ -152,6 +161,9 @@ void loop() {
   
   //volVals[expected_zeroes] = muxVals[expected_zeroes];// takes into account the weird not exactly zero readings we have from a few cells
 
+  volVals[leading_zeros] = volVals[leading_zeros] + volVals[NUM_CELLS-trailing_zeros]; //shifting to account for the ground loop we were getting
+  Serial.print("\nbottom cell offset added: ");
+  Serial.println(volVals[NUM_CELLS-trailing_zeros]);
   float volMin = volVals[leading_zeros];
   float volTotal = 0;
   float volAvg = 0;
@@ -251,10 +263,34 @@ void loop() {
     else if(modeSwitch == '9'){
       Serial.println("Little pump Low");
       digitalWrite(LITTLE_PUMP, LOW);
+      start = false;
     }
     else if(modeSwitch == 'a'){
       Serial.println("Little pump High");
       digitalWrite(LITTLE_PUMP, HIGH);
+    }
+
+    //mux select the last voltage reading
+    else if(modeSwitch == 'b'){
+      while(true){
+        if (Serial.available()){
+          break;
+        }
+        int muxSel = 4;
+        digitalWrite(MUX_SEL_0, muxSel & 1);
+        digitalWrite(MUX_SEL_1, (muxSel & 2) >> 1);
+        digitalWrite(MUX_SEL_2, (muxSel & 4) >> 2);
+        digitalWrite(MUX_SEL_3, (muxSel & 8) >> 3);
+
+        delay(5);
+
+        last_reading = analogRead(MUX_OUT_1)  / (float)1023 * voltage_divider;
+
+        Serial.println(last_reading);
+
+        delay(200);
+
+      }
     }
 
 
@@ -345,5 +381,14 @@ Notes from our session 2/23/2022, change the code to account for:
 - ignore first 4 and last 1 cell
 - should decend from 13-14ish down to 0.8 ish for the cells that we are not ignoring
 - purple wire on bottom left
+
+
+expected: 
+0   1   2   3   4   5   6   7   8   9   10   11   12   13   14   15   16   17   18   19
+n   n   n   n   14  13  12  11  10  9   8    7    6    5    3.8  2.8   2.1  1.4  0.7  0  
+//very approximate idea
+
+
+// recheck voltage reading
 */
 
