@@ -51,7 +51,7 @@ int errorCell = -1;
 float errorVol = 0;
 
 float time = 0.0;
-int delay_time = 1000;
+int delay_time = 200;
 
 bool read_last_volt = false;
 float last_reading = 0.0;
@@ -91,18 +91,19 @@ void loop() {
 
   // Iterate through each mux to get an analog reading
   for(uint8_t muxSel = 0; muxSel < 16; muxSel++){
-    digitalWrite(MUX_SEL_0, muxSel & 1);
-    digitalWrite(MUX_SEL_1, (muxSel & 2) >> 1);
-    digitalWrite(MUX_SEL_2, (muxSel & 4) >> 2);
-    digitalWrite(MUX_SEL_3, (muxSel & 8) >> 3);
+    digitalWrite(MUX_SEL_0, (muxSel) & 1);
+    digitalWrite(MUX_SEL_1, ((muxSel) & 2) >> 1);
+    digitalWrite(MUX_SEL_2, ((muxSel) & 4) >> 2);
+    digitalWrite(MUX_SEL_3, ((muxSel) & 8) >> 3);
 
     //delay is added here to take into account switching time between the muxes 
     // Enable turn-on/off time is approxiamtely 150 ns each, will use 5ms to be safe 
-    delay(5);
+    delay(50);
     
     // get mux readings and convert them to 1
     rawVals[muxSel] = analogRead(MUX_OUT_1);
     muxVals[muxSel] = (float) rawVals[muxSel] / 1023 * voltage_divider;
+    delay(5);
 
     // add values from second mux to the array
     if (muxSel < NUM_CELLS - 16){ //only need the space for the number of pins there are
@@ -110,10 +111,16 @@ void loop() {
       muxVals[muxSel+16] = (float) rawVals[muxSel+16] / 1023 * voltage_divider;
     } 
   }
+
+  //swap for weird hardware issue we had with muxselect 1,2,3,4 being about 0.2 too low
+  muxVals[leading_zeros] = muxVals[0];
+  muxVals[16] = muxVals[NUM_CELLS - 1]; //hardcoded fix right now
+
   //print raw unsorted for debugging each individual pin of board
   if(debugging){
     //Serial.println("raw and unsorted");
     for (int i = leading_zeros; i < NUM_CELLS - trailing_zeros; i++){
+    //for (int i = 0; i < NUM_CELLS; i++){
     Serial.print(muxVals[i]);
     Serial.print("\t");
   }  
@@ -161,14 +168,17 @@ void loop() {
   
   //volVals[expected_zeroes] = muxVals[expected_zeroes];// takes into account the weird not exactly zero readings we have from a few cells
 
-  volVals[leading_zeros] = volVals[leading_zeros] + volVals[NUM_CELLS-trailing_zeros]; //shifting to account for the ground loop we were getting
-  Serial.print("\nbottom cell offset added: ");
-  Serial.println(volVals[NUM_CELLS-trailing_zeros]);
+  //volVals[leading_zeros] = volVals[leading_zeros] + volVals[NUM_CELLS-trailing_zeros]; //shifting to account for the ground loop we were getting
+  //Serial.print("\nbottom cell offset added: ");
+  //Serial.println(volVals[NUM_CELLS-trailing_zeros]);
   float volMin = volVals[leading_zeros];
   float volTotal = 0;
   float volAvg = 0;
   int count = 0;
-  int minIndex = 0;
+  int minIndex = leading_zeros;
+  int secondMinIndex = leading_zeros+1;
+  int secondVolMin = volVals[leading_zeros+1];
+
 
 
   // calculate averages, total, minimums etc...
@@ -177,6 +187,8 @@ void loop() {
     count++;
     
     if(volVals[i] < volMin){
+      secondMinIndex = minIndex;
+      secondVolMin = volMin;
       volMin = volVals[i];
       minIndex = i;
     } 
@@ -292,11 +304,14 @@ void loop() {
 
       }
     }
-
-
-    delay(1000);
+    delay(500);
   } 
 
+  //comment this section out if we fix the top cell issue
+  // if(minIndex = leading_zeros){
+  //   volMin = secondVolMin;
+  //   minIndex = secondMinIndex;
+  // }
   
   // control logic
   // check if it is in the initialization state 
@@ -315,6 +330,7 @@ void loop() {
 
 
       // if voltage is too low, turn on big pump until voltage exceeds a threshold 
+      //Todo: add option for only one pump here
       if (!bigPump && volMin < 0.7 ) {
         digitalWrite(BIG_PUMP, HIGH);
         bigPump = true;
@@ -343,6 +359,7 @@ void loop() {
     }
     // todo: add if still in initialization state
     else if(time>15000){
+      time = 16000;
       digitalWrite(RELAY, HIGH);
       digitalWrite(LITTLE_PUMP, LOW);
       digitalWrite(BIG_PUMP, LOW);
