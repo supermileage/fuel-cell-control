@@ -7,6 +7,7 @@
  5: Debugging = False, -> normal mode
  6: iterate through pwm of little pump 
  */
+#define SERIAL Serial
 
 #define RELAY 8
 #define BIG_PUMP 9
@@ -47,14 +48,19 @@ bool debugging = false;
 
 bool one_pump = false;
 
-int errorCell = -1;
+int errorIndex = -1;
+int errorCell = 0;
 float errorVol = 0;
 
 float time = 0.0;
-int delay_time = 200;
+int mux_delay = 5;
+int extra_delay = 200;
+int delay_time = mux_delay*16+extra_delay;
 
 bool read_last_volt = false;
 float last_reading = 0.0;
+
+int cellTable[NUM_CELLS] = {16,-1,-1,16,15,14,13,12,11,10,9,8,7, 6, 5, 4, 3, 2, 1, 3};
 
 void setup() {
   // put your setup code here, to run once:
@@ -86,7 +92,7 @@ void loop() {
   // Debug LED
   digitalWrite(LED, led);
   led = !led;
-  delay(delay_time); //add when debugging to view values easily
+  delay(extra_delay); //add when debugging to view values easily
   //Serial.print("test");
 
   // Iterate through each mux to get an analog reading
@@ -98,12 +104,12 @@ void loop() {
 
     //delay is added here to take into account switching time between the muxes 
     // Enable turn-on/off time is approxiamtely 150 ns each, will use 5ms to be safe 
-    delay(50);
+    delay(mux_delay);
     
     // get mux readings and convert them to 1
     rawVals[muxSel] = analogRead(MUX_OUT_1);
     muxVals[muxSel] = (float) rawVals[muxSel] / 1023 * voltage_divider;
-    delay(5);
+    delay(mux_delay);
 
     // add values from second mux to the array
     if (muxSel < NUM_CELLS - 16){ //only need the space for the number of pins there are
@@ -299,6 +305,7 @@ void loop() {
         last_reading = analogRead(MUX_OUT_1)  / (float)1023 * voltage_divider;
 
         Serial.println(last_reading);
+        Serial.println("*");
 
         delay(200);
 
@@ -321,8 +328,12 @@ void loop() {
       //add error state here
       if(error){
         Serial.println("Error");
-        Serial.print("Error Cell: ");
-        Serial.println(errorCell);
+        Serial.print("Error Index: ");
+        Serial.println(errorIndex);
+        if(errorIndex != -1){
+          Serial.print("Error Cell: ");
+          Serial.println(cellTable[errorIndex]);
+        }
         Serial.print("Error Voltage: ");
         Serial.println(errorVol);
         return;
@@ -347,7 +358,7 @@ void loop() {
         digitalWrite(BIG_PUMP, LOW);
         error = true;
         bigPump = false;
-        errorCell = minIndex;
+        errorIndex = minIndex;
         errorVol = volMin;
       }
 
@@ -358,22 +369,30 @@ void loop() {
         //delay(2000);
     }
     // todo: add if still in initialization state
-    else if(time>15000){
-      time = 16000;
+    else if(time>15000 && !bigPump){
+      digitalWrite(BIG_PUMP, HIGH);
+      bigPump = true;
+      errorIndex = minIndex;
+      errorVol = volMin;
+      Serial.println("big init");
+    }
+    else if(time>25000){
+      time = 28000;
       digitalWrite(RELAY, HIGH);
       digitalWrite(LITTLE_PUMP, LOW);
       digitalWrite(BIG_PUMP, LOW);
       error = true;
       bigPump = false;
-      errorCell = minIndex;
+      errorIndex = minIndex;
       errorVol = volMin;
-      Serial.println("stuck in intial");
+      Serial.println("stuck in init");
     }
     
     else{
       // initialization state
-      //time += delay_time; //comment this out to disable startup shutdown
+      time += delay_time; //comment this out to disable startup shutdown
       analogWrite(LITTLE_PUMP, PUMP_PWM);
+       Serial.println("init");
     }
   }
   //stop state
@@ -400,11 +419,14 @@ Notes from our session 2/23/2022, change the code to account for:
 - purple wire on bottom left
 
 
-expected: 
+expected ish (I don't feel like doing actual calcs but assume they are about the same diff): 
 0   1   2   3   4   5   6   7   8   9   10   11   12   13   14   15   16   17   18   19
-n   n   n   n   14  13  12  11  10  9   8    7    6    5    3.8  2.8   2.1  1.4  0.7  0  
+n   n   n   n   14  13  12  11  10  9   8    7    6    5    4  3.2   2.4  1.6  0.8  0  
 //very approximate idea
-
+cell corresponding to index rearranged:
+wiring cell:  16  n   n   n   15  14  13  12  11  10   9    8    7    6    5    4    n    2    1    3
+index:        0   1   2   3   4   5   6   7   8   9   10   11   12   13   14   15   16   17   18   19
+cell index:   16  -1  -1  16  15  14  13  12  11  10   9    8    7    6    5    4    3    2    1    3
 
 // recheck voltage reading
 */
