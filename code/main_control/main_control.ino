@@ -6,7 +6,15 @@
  4: Debugging = True, -> print the voltage values without sorting the cells
  5: Debugging = False, -> normal mode
  6: iterate through pwm of little pump 
+ 7: Relay Low
+ 8: Relay High
+ 9: Little Pump Low
+ a: Little Pump High
+ b: loop read only the mux select of last voltage reading - for testing
+
+ Common operation: 07a
  */
+ //let's us switch between Serial (USB) and Serial1 (TX and RX pins) for telemetry data
 #define SERIAL Serial
 
 #define RELAY 8
@@ -82,8 +90,8 @@ void setup() {
   digitalWrite(BIG_PUMP, LOW);
   analogWrite(LITTLE_PUMP, PUMP_PWM);
   
-  Serial.begin(9600);
-  //Serial.print("Hello");
+  SERIAL.begin(9600);
+  //SERIAL.print("Hello");
 
 }
 
@@ -93,7 +101,7 @@ void loop() {
   digitalWrite(LED, led);
   led = !led;
   delay(extra_delay); //add when debugging to view values easily
-  //Serial.print("test");
+  //SERIAL.print("test");
 
   // Iterate through each mux to get an analog reading
   for(uint8_t muxSel = 0; muxSel < 16; muxSel++){
@@ -124,13 +132,13 @@ void loop() {
 
   //print raw unsorted for debugging each individual pin of board
   if(debugging){
-    //Serial.println("raw and unsorted");
+    //SERIAL.println("raw and unsorted");
     for (int i = leading_zeros; i < NUM_CELLS - trailing_zeros; i++){
     //for (int i = 0; i < NUM_CELLS; i++){
-    Serial.print(muxVals[i]);
-    Serial.print("\t");
+    SERIAL.print(muxVals[i]);
+    SERIAL.print("\t");
   }  
-  Serial.println("\n");
+  SERIAL.println("\n");
   }
 
 
@@ -139,33 +147,33 @@ void loop() {
   //qsort(muxVals,NUM_CELLS, sizeof (float), compar); //don't sort, we will hard code cell positions
 
 ////print raw values for debugging purposes
-  // Serial.println("\nraw");
+  // SERIAL.println("\nraw");
   // for (int i = 0; i < NUM_CELLS; i++){
-  //   Serial.print((float)muxVals[i]);
-  //   Serial.print("\t");
+  //   SERIAL.print((float)muxVals[i]);
+  //   SERIAL.print("\t");
   // }  
   
   //calculate voltage values of each individual cell
   /*volVals[NUM_CELLS-trailing_zeros] = muxVals[NUM_CELLS-trailing_zeros];
   if(!debugging){
-    Serial.println("\nvol");
-    //Serial.print((float)volVals[0]);
-    Serial.print("\t");
+    SERIAL.println("\nvol");
+    //SERIAL.print((float)volVals[0]);
+    SERIAL.print("\t");
   }*/
 
   for (int i = leading_zeros; i < NUM_CELLS-trailing_zeros-1; i++){
     volVals[i] = muxVals[i] - muxVals[i+1];
     if(!debugging){
-      Serial.print((float)volVals[i]);
-      Serial.print("\t");
+      SERIAL.print((float)volVals[i]);
+      SERIAL.print("\t");
     }
     
   }  
   volVals[NUM_CELLS-trailing_zeros-1] = muxVals[NUM_CELLS-trailing_zeros-1];
   if(!debugging){
-    //Serial.println("\nvol");
-    Serial.print((float)volVals[NUM_CELLS-trailing_zeros-1]);
-    Serial.print("\t");
+    //SERIAL.println("\nvol");
+    SERIAL.print((float)volVals[NUM_CELLS-trailing_zeros-1]);
+    SERIAL.print("\t");
   }
   // todo: find number of expected zeroes, based on number of cells plugged in, and ignore that number of zeroes
 
@@ -175,8 +183,8 @@ void loop() {
   //volVals[expected_zeroes] = muxVals[expected_zeroes];// takes into account the weird not exactly zero readings we have from a few cells
 
   //volVals[leading_zeros] = volVals[leading_zeros] + volVals[NUM_CELLS-trailing_zeros]; //shifting to account for the ground loop we were getting
-  //Serial.print("\nbottom cell offset added: ");
-  //Serial.println(volVals[NUM_CELLS-trailing_zeros]);
+  //SERIAL.print("\nbottom cell offset added: ");
+  //SERIAL.println(volVals[NUM_CELLS-trailing_zeros]);
   float volMin = volVals[leading_zeros];
   float volTotal = 0;
   float volAvg = 0;
@@ -204,28 +212,28 @@ void loop() {
   
   // print info:
   if(!debugging){
-    Serial.print("\n");
-    Serial.print("m ");
-    Serial.println(volMin);
-    Serial.print("i ");
-    Serial.println(minIndex);
+    SERIAL.print("\n");
+    SERIAL.print("m ");
+    SERIAL.println(volMin);
+    SERIAL.print("i ");
+    SERIAL.println(minIndex);
 
-    Serial.print("t ");
-    Serial.println(volTotal);
+    SERIAL.print("t ");
+    SERIAL.println(volTotal);
 
-    Serial.print("a ");
-    Serial.println(volAvg);
+    SERIAL.print("a ");
+    SERIAL.println(volAvg);
   }
   
 
   //check if user has entered information into the serial monitor
-   if (Serial.available()){
-    Serial.print("Serial received - ");
-    unsigned char modeSwitch = Serial.read();
+   if (SERIAL.available()){
+    SERIAL.print("Serial received - ");
+    unsigned char modeSwitch = SERIAL.read();
     // todo print char here
     
     if (modeSwitch == '1'){
-      Serial.println("Starting");
+      SERIAL.println("Starting");
       time = 0.0;
       start = true;
       error = false;
@@ -234,7 +242,7 @@ void loop() {
       digitalWrite(RELAY, LOW); 
     }
     else if (modeSwitch == '0'){
-      Serial.println("Stopping");
+      SERIAL.println("Stopping");
       start = false;
       digitalWrite(LITTLE_PUMP, LOW);
       digitalWrite(RELAY, HIGH);
@@ -245,12 +253,12 @@ void loop() {
 
     // 2 and 3 are for turning on and off big pump without affecting anything else in the system
     else if(modeSwitch == '2'){
-      Serial.println("Big Pump High");
+      SERIAL.println("Big Pump High");
       digitalWrite(BIG_PUMP, HIGH);
       bigPump = true;
     }
     else if(modeSwitch == '3'){
-      Serial.println("Big Pump Low");
+      SERIAL.println("Big Pump Low");
       digitalWrite(BIG_PUMP, LOW);
       bigPump = false;
     }
@@ -270,28 +278,28 @@ void loop() {
     }
     //7 and 8 are for indivually testing the safety without turning on other pumps
     else if(modeSwitch == '7'){
-      Serial.println("Relay Low");
+      SERIAL.println("Relay Low");
       digitalWrite(RELAY, LOW);
     }
     else if(modeSwitch == '8'){
-      Serial.println("Relay High");
+      SERIAL.println("Relay High");
       digitalWrite(RELAY, HIGH);
     }
     //turn off little pump without turning on relay
     else if(modeSwitch == '9'){
-      Serial.println("Little pump Low");
+      SERIAL.println("Little pump Low");
       digitalWrite(LITTLE_PUMP, LOW);
       start = false;
     }
     else if(modeSwitch == 'a'){
-      Serial.println("Little pump High");
+      SERIAL.println("Little pump High");
       digitalWrite(LITTLE_PUMP, HIGH);
     }
 
     //mux select the last voltage reading
     else if(modeSwitch == 'b'){
       while(true){
-        if (Serial.available()){
+        if (SERIAL.available()){
           break;
         }
         int muxSel = 4;
@@ -304,8 +312,8 @@ void loop() {
 
         last_reading = analogRead(MUX_OUT_1)  / (float)1023 * voltage_divider;
 
-        Serial.println(last_reading);
-        Serial.println("*");
+        SERIAL.println(last_reading);
+        SERIAL.println("*");
 
         delay(200);
 
@@ -327,15 +335,15 @@ void loop() {
     if(!initializing){
       //add error state here
       if(error){
-        Serial.println("Error");
-        Serial.print("Error Index: ");
-        Serial.println(errorIndex);
+        SERIAL.println("Error");
+        SERIAL.print("Error Index: ");
+        SERIAL.println(errorIndex);
         if(errorIndex != -1){
-          Serial.print("Error Cell: ");
-          Serial.println(cellTable[errorIndex]);
+          SERIAL.print("Error Cell: ");
+          SERIAL.println(cellTable[errorIndex]);
         }
-        Serial.print("Error Voltage: ");
-        Serial.println(errorVol);
+        SERIAL.print("Error Voltage: ");
+        SERIAL.println(errorVol);
         return;
       }
 
@@ -374,7 +382,7 @@ void loop() {
       bigPump = true;
       errorIndex = minIndex;
       errorVol = volMin;
-      Serial.println("big init");
+      SERIAL.println("big init");
     }
     else if(time>25000){
       time = 28000;
@@ -385,23 +393,23 @@ void loop() {
       bigPump = false;
       errorIndex = minIndex;
       errorVol = volMin;
-      Serial.println("stuck in init");
+      SERIAL.println("stuck in init");
     }
     
     else{
       // initialization state
       time += delay_time; //comment this out to disable startup shutdown
       analogWrite(LITTLE_PUMP, PUMP_PWM);
-       Serial.println("init");
+       SERIAL.println("init");
     }
   }
   //stop state
   else{
-    Serial.println("Stop state");
+    SERIAL.println("Stop state");
   }
   
   //end character for sending data
-  Serial.print("*");
+  SERIAL.print("*");
 }
 
 int compar (const void* p1, const void* p2){
