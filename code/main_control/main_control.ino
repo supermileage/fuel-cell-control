@@ -377,14 +377,7 @@ void loop() {
         //delay(2000);
     }
     // todo: add if still in initialization state
-    else if(time>15000 && !bigPump){
-      digitalWrite(BIG_PUMP, HIGH);
-      bigPump = true;
-      errorIndex = minIndex;
-      errorVol = volMin;
-      SERIAL.println("big init");
-    }
-    else if(time>25000){
+    else if(time>20000){
       time = 28000;
       digitalWrite(RELAY, HIGH);
       digitalWrite(LITTLE_PUMP, LOW);
@@ -395,6 +388,14 @@ void loop() {
       errorVol = volMin;
       SERIAL.println("stuck in init");
     }
+    else if(time>10000 && !bigPump){
+      digitalWrite(BIG_PUMP, HIGH);
+      bigPump = true;
+      errorIndex = minIndex;
+      errorVol = volMin;
+      SERIAL.println("big init");
+    }
+    
     
     else{
       // initialization state
