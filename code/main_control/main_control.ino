@@ -35,7 +35,7 @@
 
 #define LED 13
 
-int leading_zeros = 4; //should be 4
+int leading_zeros = 2; //should be 4
 int trailing_zeros = 1; //should be 1? or maybe 2 - probably 1
 
 float muxVals[NUM_CELLS] = {};
@@ -52,7 +52,7 @@ bool start = true;
 bool first = false;
 bool error = false;
 
-bool debugging = false;
+bool debugging = true;
 
 bool one_pump = false;
 
@@ -125,10 +125,6 @@ void loop() {
       muxVals[muxSel+16] = (float) rawVals[muxSel+16] / 1023 * voltage_divider;
     } 
   }
-
-  //swap for weird hardware issue we had with muxselect 1,2,3,4 being about 0.2 too low
-  muxVals[leading_zeros] = muxVals[0];
-  muxVals[16] = muxVals[NUM_CELLS - 1]; //hardcoded fix right now
 
   //print raw unsorted for debugging each individual pin of board
   if(debugging){
@@ -439,4 +435,3 @@ cell index:   16  -1  -1  16  15  14  13  12  11  10   9    8    7    6    5    
 
 // recheck voltage reading
 */
-
