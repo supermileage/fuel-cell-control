@@ -52,7 +52,7 @@ bool start = true;
 bool first = false;
 bool error = false;
 
-bool debugging = true;
+bool debugging = false;
 
 bool one_pump = false;
 
@@ -69,6 +69,7 @@ bool read_last_volt = false;
 float last_reading = 0.0;
 
 int cellTable[NUM_CELLS] = {16,-1,-1,16,15,14,13,12,11,10,9,8,7, 6, 5, 4, 3, 2, 1, 3};
+float cell_calibration[NUM_CELLS] = {0.0143, 0.0143, 0.0155, 0.0155, 0.0155, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141};
 
 void setup() {
   // put your setup code here, to run once:
@@ -105,6 +106,13 @@ void loop() {
 
   // Iterate through each mux to get an analog reading
   for(uint8_t muxSel = 0; muxSel < 16; muxSel++){
+//    digitalWrite(MUX_SEL_0, 19);
+//    digitalWrite(MUX_SEL_1, 19);
+//    digitalWrite(MUX_SEL_2, 19);
+//    digitalWrite(MUX_SEL_3, 19);
+//
+//    delay(mux_delay);
+    
     digitalWrite(MUX_SEL_0, (muxSel) & 1);
     digitalWrite(MUX_SEL_1, ((muxSel) & 2) >> 1);
     digitalWrite(MUX_SEL_2, ((muxSel) & 4) >> 2);
@@ -116,21 +124,30 @@ void loop() {
     
     // get mux readings and convert them to 1
     rawVals[muxSel] = analogRead(MUX_OUT_1);
-    muxVals[muxSel] = (float) rawVals[muxSel] / 1023 * voltage_divider;
-    delay(mux_delay);
+    muxVals[muxSel] = (float) rawVals[muxSel] * cell_calibration[muxSel];
 
     // add values from second mux to the array
     if (muxSel < NUM_CELLS - 16){ //only need the space for the number of pins there are
       rawVals[muxSel+16] = analogRead(MUX_OUT_2);
-      muxVals[muxSel+16] = (float) rawVals[muxSel+16] / 1023 * voltage_divider;
+      muxVals[muxSel+16] = (float) rawVals[muxSel+16] * cell_calibration[muxSel + 16];
     } 
   }
+  //int newCalibration = 0.0155;
+  rawVals[2] = analogRead(A2);
+  rawVals[3] = analogRead(A6);
+  rawVals[4] = analogRead(A4);
+  for(int i=2;i<=4;i++){
+    muxVals[i] = rawVals[i]*cell_calibration[i];
+  }
+  
 
   //print raw unsorted for debugging each individual pin of board
   if(debugging){
     //SERIAL.println("raw and unsorted");
     for (int i = leading_zeros; i < NUM_CELLS - trailing_zeros; i++){
     //for (int i = 0; i < NUM_CELLS; i++){
+    SERIAL.print(i);
+    SERIAL.print(": ");
     SERIAL.print(muxVals[i]);
     SERIAL.print("\t");
   }  
