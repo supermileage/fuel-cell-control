@@ -3,7 +3,7 @@
  1: Start state // little pump on, relay off
  2: Big Pump On
  3: Big Pump Off
- 4: Debugging = True, -> print the voltage values without sorting the cells
+ 4: Debugging = True, -> print the voltage values with reference to ground instead of cell values
  5: Debugging = False, -> normal mode
  6: iterate through pwm of little pump 
  7: Relay Low
@@ -390,7 +390,7 @@ void loop() {
         //delay(2000);
     }
     // todo: add if still in initialization state
-    else if(time>20000){
+    else if(time>18000){
       time = 28000;
       digitalWrite(RELAY, HIGH);
       digitalWrite(LITTLE_PUMP, LOW);
