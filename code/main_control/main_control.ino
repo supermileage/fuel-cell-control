@@ -15,7 +15,7 @@
  Common operation: 07a
  */
  //let's us switch between Serial (USB) and Serial1 (TX and RX pins) for telemetry data
-#define SERIAL Serial
+#define SERIAL Serial1
 
 #define RELAY 8
 #define BIG_PUMP 9
@@ -69,7 +69,7 @@ bool read_last_volt = false;
 float last_reading = 0.0;
 
 int cellTable[NUM_CELLS] = {16,-1,-1,16,15,14,13,12,11,10,9,8,7, 6, 5, 4, 3, 2, 1, 3};
-float cell_calibration[NUM_CELLS] = {0.0143, 0.0143, 0.0155, 0.0155, 0.0155, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141};
+float cell_calibration[NUM_CELLS] = {0.0143, 0.0143, 0.0155, 0.0156, 0.0155, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141};
 
 void setup() {
   // put your setup code here, to run once:
