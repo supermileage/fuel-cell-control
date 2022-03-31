@@ -28,9 +28,9 @@ for msg in messages:
         break_flag = False
         for i in range(0, 17):
             cell_voltages[i].append(float(split_data[i]))
-            if float(split_data[i]) > 2:
-                break_flag = True
-                break
+            # if float(split_data[i]) > 2:
+            #     break_flag = True
+            #     break
         # if break_flag:
         #     break
 
