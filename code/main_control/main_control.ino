@@ -69,7 +69,7 @@ bool read_last_volt = false;
 float last_reading = 0.0;
 
 int cellTable[NUM_CELLS] = {16,-1,-1,16,15,14,13,12,11,10,9,8,7, 6, 5, 4, 3, 2, 1, 3};
-float cell_calibration[NUM_CELLS] = {0.0143, 0.0143, 0.0155, 0.0156, 0.0155, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141};
+float cell_calibration[NUM_CELLS] = {0.0143, 0.0143, 0.0155, 0.0156, 0.0155, 0.0156, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141};
 
 void setup() {
   // put your setup code here, to run once:
@@ -136,7 +136,8 @@ void loop() {
   rawVals[2] = analogRead(A2);
   rawVals[3] = analogRead(A6);
   rawVals[4] = analogRead(A4);
-  for(int i=2;i<=4;i++){
+  rawVals[5] = analogRead(A5);
+  for(int i=2;i<=5;i++){
     muxVals[i] = rawVals[i]*cell_calibration[i];
   }
   
