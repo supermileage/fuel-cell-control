@@ -2,10 +2,16 @@ from sseclient import SSEClient     # is a requirement
 import matplotlib.pyplot as plt     # is a requirement
 import json
 
-messages = SSEClient('https://api.particle.io/v1/devices/e00fce68610702f7e28594a7/events?access_token=815f0688c133a38120ccc27f22c5bfd16ea90d2e')
+messages = SSEClient('https://api.particle.io/v1/devices/e00fce68610702f7e28594a7/events?access_token=2d4d4f761e9147ba236b8fb6460913469e492743')
 cell_voltages = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
 colors = ['b','g','r','c','m','y','k','b--','g--','r--','c--','m--','y--','k--', 'b-+','g-+','r-+']
 numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16','17']
+ymin=-0.5
+ymax = 1.5
+ax = plt.gca()
+ax.set_ylim([ymin, ymax])
+
+#fig, axs = plt.subplots(2)
 
 for msg in messages:
     
@@ -25,17 +31,27 @@ for msg in messages:
             if float(split_data[i]) > 2:
                 break_flag = True
                 break
-        if break_flag:
-            break
+        # if break_flag:
+        #     break
 
 
         for i in range(0,17):
+            # plt.subplot(2, 1, 1)
+            plt.figure(num=1)
             plt.plot(cell_voltages[i], colors[i])
+            #axs[0, 0].plot(cell_voltages[i], colors[i])
         
         plt.legend(numbers)
         print(data['data'])
         
         plt.pause(1)
+        # total_v = float(split_data[17 + 6 - 1])
+        # print(total_v)
+
+        ## plt.subplot(2, 1, 2)
+        # plt.figure(num=2)
+        # plt.plot(total_v,colors[0])
+        # plt.pause(1)
     except:
         continue
     # print(data)
