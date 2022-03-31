@@ -5,7 +5,7 @@ import json
 messages = SSEClient('https://api.particle.io/v1/devices/e00fce68610702f7e28594a7/events?access_token=2d4d4f761e9147ba236b8fb6460913469e492743')
 cell_voltages = [[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]]
 colors = ['b','g','r','c','m','y','k','b--','g--','r--','c--','m--','y--','k--', 'b-+','g-+','r-+']
-numbers = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16','17']
+numbers = ['17', '16', '15', '14', '13', '12', '11', '10', '9', '8', '7', '6', '5', '4', '3', '2','1']
 ymin=-0.5
 ymax = 1.5
 ax = plt.gca()
@@ -28,11 +28,6 @@ for msg in messages:
         break_flag = False
         for i in range(0, 17):
             cell_voltages[i].append(float(split_data[i]))
-            # if float(split_data[i]) > 2:
-            #     break_flag = True
-            #     break
-        # if break_flag:
-        #     break
 
 
         for i in range(0,17):
