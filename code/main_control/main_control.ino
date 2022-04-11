@@ -71,6 +71,14 @@ float last_reading = 0.0;
 int cellTable[NUM_CELLS] = {16,-1,-1,16,15,14,13,12,11,10,9,8,7, 6, 5, 4, 3, 2, 1, 3};
 float cell_calibration[NUM_CELLS] = {0.0143, 0.0143, 0.0155, 0.0156, 0.0155, 0.0156, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141, 0.0141};
 
+// unsigned long lastErrorTime = 0;
+// unsigned long lastBigPumpTime = 0;
+// unsigned long debounceDelay = delay_time*4;
+
+int bigPumpCounter = 0;
+int errorCount = 0;
+int countLimit = 2;
+
 void setup() {
   // put your setup code here, to run once:
   pinMode(LITTLE_PUMP, OUTPUT);
@@ -365,28 +373,44 @@ void loop() {
       // if voltage is too low, turn on big pump until voltage exceeds a threshold 
       //Todo: add option for only one pump here
       if (!bigPump && volMin < 0.7 ) {
-        digitalWrite(BIG_PUMP, HIGH);
-        bigPump = true;
+        bigPumpCounter += 1;
+        if(bigPumpCounter>countLimit){
+          digitalWrite(BIG_PUMP, HIGH);
+          bigPump = true;
+          bigPumpCounter = countLimit + 5; //placeholder to prevent overflow
+        }
+        
       } else if (bigPump, volMin > 0.75) {
         bigPump = false;
         digitalWrite(BIG_PUMP, LOW);
+        bigPumpCounter = 0;
+        
+      } else{
+        bigPumpCounter = 0;
       }
 
       
       
       if (volMin < 0.5){
-        digitalWrite(RELAY, HIGH);
-        digitalWrite(LITTLE_PUMP, LOW);
-        digitalWrite(BIG_PUMP, LOW);
-        error = true;
-        bigPump = false;
-        errorIndex = minIndex;
-        errorVol = volMin;
+        errorCount += 1;
+        if(errorCount>countLimit){
+          digitalWrite(RELAY, HIGH);
+          digitalWrite(LITTLE_PUMP, LOW);
+          digitalWrite(BIG_PUMP, LOW);
+          error = true;
+          bigPump = false;
+          errorIndex = minIndex;
+          errorVol = volMin;
+        }
+        
+      }
+      else{
+        errorCount = 0;
       }
 
       
     } // wait until capacitor charges up to 12 Volts
-    else if (volMin > 0.75) {
+    else if (volMin > 0.6) {
         initializing = false;
         //delay(2000);
     }
