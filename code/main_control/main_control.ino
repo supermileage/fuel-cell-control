@@ -15,7 +15,7 @@
  Common operation: 07a
  */
  //let's us switch between Serial (USB) and Serial1 (TX and RX pins) for telemetry data
-#define SERIAL Serial1
+#define SERIAL Serial
 
 #define RELAY 8
 #define BIG_PUMP 9
@@ -391,7 +391,7 @@ void loop() {
 
       
       
-      if (volMin < 0.5){
+      if (volMin < 0.4){
         errorCount += 1;
         if(errorCount>countLimit){
           digitalWrite(RELAY, HIGH);

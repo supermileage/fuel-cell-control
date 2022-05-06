@@ -5,7 +5,7 @@ https://dlnmh9ip6v2uc.cloudfront.net/datasheets/Sensors/Biometric/MQ-8.pdf
 */
 
 #define hydrogenSensor A0
-float hydrogenThreshold = 50; // todo find a threshold value for hydrogen
+float hydrogenThreshold = 400; // todo find a threshold value for hydrogen
 float sensorInput;
 
 void setup() {
