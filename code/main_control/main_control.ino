@@ -17,7 +17,7 @@
  //let's us switch between Serial (USB) and Serial1 (TX and RX pins) for telemetry data
 #include <HardwareSerial.h>
 
-#define SERIAL Serial
+#define SERIAL Serial1
 
 #define RELAY 8
 #define BIG_PUMP 9
@@ -44,8 +44,8 @@
 #define FC_HEADER_4 0x1D
 #define FC_HEADER_5 0x1F
 
-int leading_zeros = 2; //should be 4
-int trailing_zeros = 1; //should be 1? or maybe 2 - probably 1
+#define LEADING_ZEROES 2 //should be 4
+#define TRAILING_ZEROES 1 //should be 1? or maybe 2 - probably 1
 
 float muxVals[NUM_CELLS] = {};
 float volVals[NUM_CELLS] = {};
@@ -110,7 +110,7 @@ void setup() {
   digitalWrite(BIG_PUMP, LOW);
   analogWrite(LITTLE_PUMP, PUMP_PWM);
   
-  SERIAL.begin(9600);
+  //SERIAL.begin(9600);
   Serial1.begin(9600);
   //SERIAL.print("Hello");
 
@@ -165,14 +165,14 @@ void loop() {
   //print raw unsorted for debugging each individual pin of board
   if(debugging){
     //SERIAL.println("raw and unsorted");
-    for (int i = leading_zeros; i < NUM_CELLS - trailing_zeros; i++){
+    for (int i = LEADING_ZEROES; i < NUM_CELLS - TRAILING_ZEROES; i++){
     //for (int i = 0; i < NUM_CELLS; i++){
-    SERIAL.print(i);
-    SERIAL.print(": ");
-    SERIAL.print(muxVals[i]);
-    SERIAL.print("\t");
+    // SERIAL.print(i);
+    // SERIAL.print(": ");
+    // SERIAL.print(muxVals[i]);
+    // SERIAL.print("\t");
   }  
-  SERIAL.println("\n");
+  // SERIAL.println("\n");
   }
 
 
@@ -188,26 +188,26 @@ void loop() {
   // }  
   
   //calculate voltage values of each individual cell
-  /*volVals[NUM_CELLS-trailing_zeros] = muxVals[NUM_CELLS-trailing_zeros];
+  /*volVals[NUM_CELLS-TRAILING_ZEROES] = muxVals[NUM_CELLS-TRAILING_ZEROES];
   if(!debugging){
     SERIAL.println("\nvol");
     //SERIAL.print((float)volVals[0]);
     SERIAL.print("\t");
   }*/
 
-  for (int i = leading_zeros; i < NUM_CELLS-trailing_zeros-1; i++){
+  for (int i = LEADING_ZEROES; i < NUM_CELLS-TRAILING_ZEROES-1; i++){
     volVals[i] = muxVals[i] - muxVals[i+1];
     if(!debugging){
-      SERIAL.print((float)volVals[i]);
-      SERIAL.print("\t");
+      // SERIAL.print((float)volVals[i]);
+      // SERIAL.print("\t");
     }
     
   }
-  volVals[NUM_CELLS-trailing_zeros-1] = muxVals[NUM_CELLS-trailing_zeros-1];
+  volVals[NUM_CELLS-TRAILING_ZEROES-1] = muxVals[NUM_CELLS-TRAILING_ZEROES-1];
   if(!debugging){
     //SERIAL.println("\nvol");
-    SERIAL.print((float)volVals[NUM_CELLS-trailing_zeros-1]);
-    SERIAL.print("\t");
+    // SERIAL.print((float)volVals[NUM_CELLS-TRAILING_ZEROES-1]);
+    // SERIAL.print("\t");
   }
 
   sendTelemetry();
@@ -218,21 +218,21 @@ void loop() {
   
   //volVals[expected_zeroes] = muxVals[expected_zeroes];// takes into account the weird not exactly zero readings we have from a few cells
 
-  //volVals[leading_zeros] = volVals[leading_zeros] + volVals[NUM_CELLS-trailing_zeros]; //shifting to account for the ground loop we were getting
+  //volVals[LEADING_ZEROES] = volVals[LEADING_ZEROES] + volVals[NUM_CELLS-TRAILING_ZEROES]; //shifting to account for the ground loop we were getting
   //SERIAL.print("\nbottom cell offset added: ");
-  //SERIAL.println(volVals[NUM_CELLS-trailing_zeros]);
-  float volMin = volVals[leading_zeros];
+  //SERIAL.println(volVals[NUM_CELLS-TRAILING_ZEROES]);
+  float volMin = volVals[LEADING_ZEROES];
   float volTotal = 0;
   float volAvg = 0;
   int count = 0;
-  int minIndex = leading_zeros;
-  int secondMinIndex = leading_zeros+1;
-  int secondVolMin = volVals[leading_zeros+1];
+  int minIndex = LEADING_ZEROES;
+  int secondMinIndex = LEADING_ZEROES+1;
+  int secondVolMin = volVals[LEADING_ZEROES+1];
 
 
 
   // calculate averages, total, minimums etc...
-  for (int i = leading_zeros; i < NUM_CELLS - trailing_zeros; i++){
+  for (int i = LEADING_ZEROES; i < NUM_CELLS - TRAILING_ZEROES; i++){
     volTotal += volVals[i];
     count++;
     
@@ -248,28 +248,28 @@ void loop() {
   
   // print info:
   if(!debugging){
-    SERIAL.print("\n");
-    SERIAL.print("m ");
-    SERIAL.println(volMin);
-    SERIAL.print("i ");
-    SERIAL.println(minIndex);
+    // SERIAL.print("\n");
+    // SERIAL.print("m ");
+    // SERIAL.println(volMin);
+    // SERIAL.print("i ");
+    // SERIAL.println(minIndex);
 
-    SERIAL.print("t ");
-    SERIAL.println(volTotal);
+    // SERIAL.print("t ");
+    // SERIAL.println(volTotal);
 
-    SERIAL.print("a ");
-    SERIAL.println(volAvg);
+    // SERIAL.print("a ");
+    // SERIAL.println(volAvg);
   }
   
 
   //check if user has entered information into the serial monitor
    if (SERIAL.available()){
-    SERIAL.print("Serial received - ");
+    // SERIAL.print("Serial received - ");
     unsigned char modeSwitch = SERIAL.read();
     // todo print char here
     
     if (modeSwitch == '1'){
-      SERIAL.println("Starting");
+      // SERIAL.println("Starting");
       time = 0.0;
       start = true;
       error = false;
@@ -278,7 +278,7 @@ void loop() {
       digitalWrite(RELAY, LOW); 
     }
     else if (modeSwitch == '0'){
-      SERIAL.println("Stopping");
+      // SERIAL.println("Stopping");
       start = false;
       digitalWrite(LITTLE_PUMP, LOW);
       digitalWrite(RELAY, HIGH);
@@ -289,12 +289,12 @@ void loop() {
 
     // 2 and 3 are for turning on and off big pump without affecting anything else in the system
     else if(modeSwitch == '2'){
-      SERIAL.println("Big Pump High");
+      // SERIAL.println("Big Pump High");
       digitalWrite(BIG_PUMP, HIGH);
       bigPump = true;
     }
     else if(modeSwitch == '3'){
-      SERIAL.println("Big Pump Low");
+      // SERIAL.println("Big Pump Low");
       digitalWrite(BIG_PUMP, LOW);
       bigPump = false;
     }
@@ -314,21 +314,21 @@ void loop() {
     }
     //7 and 8 are for indivually testing the safety without turning on other pumps
     else if(modeSwitch == '7'){
-      SERIAL.println("Relay Low");
+      // SERIAL.println("Relay Low");
       digitalWrite(RELAY, LOW);
     }
     else if(modeSwitch == '8'){
-      SERIAL.println("Relay High");
+      // SERIAL.println("Relay High");
       digitalWrite(RELAY, HIGH);
     }
     //turn off little pump without turning on relay
     else if(modeSwitch == '9'){
-      SERIAL.println("Little pump Low");
+      // SERIAL.println("Little pump Low");
       digitalWrite(LITTLE_PUMP, LOW);
       start = false;
     }
     else if(modeSwitch == 'a'){
-      SERIAL.println("Little pump High");
+      // SERIAL.println("Little pump High");
       digitalWrite(LITTLE_PUMP, HIGH);
     }
 
@@ -348,8 +348,8 @@ void loop() {
 
         last_reading = analogRead(MUX_OUT_1)  / (float)1023 * voltage_divider;
 
-        SERIAL.println(last_reading);
-        SERIAL.println("*");
+        // SERIAL.println(last_reading);
+        // SERIAL.println("*");
 
         delay(200);
 
@@ -359,7 +359,7 @@ void loop() {
   } 
 
   //comment this section out if we fix the top cell issue
-  // if(minIndex = leading_zeros){
+  // if(minIndex = LEADING_ZEROES){
   //   volMin = secondVolMin;
   //   minIndex = secondMinIndex;
   // }
@@ -371,15 +371,15 @@ void loop() {
     if(!initializing){
       //add error state here
       if(error){
-        SERIAL.println("Error");
-        SERIAL.print("Error Index: ");
-        SERIAL.println(errorIndex);
+        // SERIAL.println("Error");
+        // SERIAL.print("Error Index: ");
+        // SERIAL.println(errorIndex);
         if(errorIndex != -1){
-          SERIAL.print("Error Cell: ");
-          SERIAL.println(cellTable[errorIndex]);
+          // SERIAL.print("Error Cell: ");
+          // SERIAL.println(cellTable[errorIndex]);
         }
-        SERIAL.print("Error Voltage: ");
-        SERIAL.println(errorVol);
+        // SERIAL.print("Error Voltage: ");
+        // SERIAL.println(errorVol);
         return;
       }
 
@@ -438,14 +438,14 @@ void loop() {
       bigPump = false;
       errorIndex = minIndex;
       errorVol = volMin;
-      SERIAL.println("stuck in init");
+      // SERIAL.println("stuck in init");
     }
     else if(time>10000 && !bigPump){
       digitalWrite(BIG_PUMP, HIGH);
       bigPump = true;
       errorIndex = minIndex;
       errorVol = volMin;
-      SERIAL.println("big init");
+      // SERIAL.println("big init");
     }
     
     
@@ -453,16 +453,16 @@ void loop() {
       // initialization state
       time += delay_time; //comment this out to disable startup shutdown
       analogWrite(LITTLE_PUMP, PUMP_PWM);
-       SERIAL.println("init");
+      //  SERIAL.println("init");
     }
   }
   //stop state
   else{
-    SERIAL.println("Stop state");
+    // SERIAL.println("Stop state");
   }
   
   //end character for sending data
-  SERIAL.print("*");
+  // SERIAL.print("*");
 }
 
 int compar (const void* p1, const void* p2){
@@ -472,17 +472,15 @@ int compar (const void* p1, const void* p2){
 }
 
 void sendTelemetry() {
-  uint16_t cells_mv[NUM_CELLS] = {0};
+  int16_t cells_mv[NUM_CELLS] = {0};
 
   // Populate mv array
-  for (int i = leading_zeros; i < NUM_CELLS - trailing_zeros; i++) {
-    cells_mv[i] = (uint16_t)volVals[i]*1000;
+  for (int i = LEADING_ZEROES; i < NUM_CELLS - TRAILING_ZEROES; i++) {
+    cells_mv[i] = (int16_t)(volVals[i]*1000);
   }
-  char *packet = new char[
-    6 + // header
-    2 * (NUM_CELLS - trailing_zeros - leading_zeros) // cell voltages
-    + 1 // terminator
-  ];
+  char packet[6 + // header
+    2 * (NUM_CELLS - TRAILING_ZEROES - LEADING_ZEROES) // cell voltages
+    ] = {};
   packet[0] = FC_HEADER_0;
   packet[1] = FC_HEADER_1;
   packet[2] = FC_HEADER_2;
@@ -493,13 +491,18 @@ void sendTelemetry() {
   int mv_arr_index;
   int str_index;
 
-  for (int i = 0; i < NUM_CELLS - trailing_zeros - leading_zeros; i++) {
-    mv_arr_index = NUM_CELLS - trailing_zeros - i;
+  for (int i = 0; i < NUM_CELLS - TRAILING_ZEROES - LEADING_ZEROES; i++) {
+    mv_arr_index = NUM_CELLS - TRAILING_ZEROES - i;
     str_index = 6 + 2 * i;
-    *(int16_t *)(packet + str_index) = cells_mv[mv_arr_index];
+    *(uint8_t *)(packet + str_index) = cells_mv[mv_arr_index] >> 8;
+    *(uint8_t *)(packet + str_index + 1) = cells_mv[mv_arr_index] & 0xFF;
   }
 
-  Serial1.println(packet);
+  Serial1.write(
+    packet,
+    6 +
+    2 * (NUM_CELLS - TRAILING_ZEROES - LEADING_ZEROES)
+  );
   // YAY
 }
 
