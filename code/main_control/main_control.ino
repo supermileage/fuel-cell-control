@@ -480,15 +480,18 @@ void sendTelemetry() {
   }
   char *packet = new char[
     6 + // header
-    2 * (NUM_CELLS - trailing_zeros - leading_zeros // cell voltages
+    2 * (NUM_CELLS - trailing_zeros - leading_zeros) // cell voltages
     + 1 // terminator
-  ]
+  ];
   packet[0] = FC_HEADER_0;
   packet[1] = FC_HEADER_1;
   packet[2] = FC_HEADER_2;
   packet[3] = FC_HEADER_3;
   packet[4] = FC_HEADER_4;
   packet[5] = FC_HEADER_5;
+
+  int mv_arr_index;
+  int str_index;
 
   for (int i = 0; i < NUM_CELLS - trailing_zeros - leading_zeros; i++) {
     mv_arr_index = NUM_CELLS - trailing_zeros - i;
