@@ -13,8 +13,10 @@
  b: loop read only the mux select of last voltage reading - for testing
 
  Common operation: 07a
- */
+ */ 
  //let's us switch between Serial (USB) and Serial1 (TX and RX pins) for telemetry data
+#include <HardwareSerial.h>
+
 #define SERIAL Serial
 
 #define RELAY 8
@@ -34,6 +36,13 @@
 #define NUM_CELLS 20
 
 #define LED 13
+
+#define FC_HEADER_0 0x07
+#define FC_HEADER_1 0x0D
+#define FC_HEADER_2 0x11
+#define FC_HEADER_3 0x17
+#define FC_HEADER_4 0x1D
+#define FC_HEADER_5 0x1F
 
 int leading_zeros = 2; //should be 4
 int trailing_zeros = 1; //should be 1? or maybe 2 - probably 1
@@ -79,6 +88,8 @@ int bigPumpCounter = 0;
 int errorCount = 0;
 int countLimit = 2;
 
+void sendTelemetry();
+
 void setup() {
   // put your setup code here, to run once:
   pinMode(LITTLE_PUMP, OUTPUT);
@@ -100,6 +111,7 @@ void setup() {
   analogWrite(LITTLE_PUMP, PUMP_PWM);
   
   SERIAL.begin(9600);
+  Serial1.begin(9600);
   //SERIAL.print("Hello");
 
 }
@@ -190,13 +202,15 @@ void loop() {
       SERIAL.print("\t");
     }
     
-  }  
+  }
   volVals[NUM_CELLS-trailing_zeros-1] = muxVals[NUM_CELLS-trailing_zeros-1];
   if(!debugging){
     //SERIAL.println("\nvol");
     SERIAL.print((float)volVals[NUM_CELLS-trailing_zeros-1]);
     SERIAL.print("\t");
   }
+
+  sendTelemetry();
   // todo: find number of expected zeroes, based on number of cells plugged in, and ignore that number of zeroes
 
   // get min, avg and total voltage values
@@ -457,6 +471,34 @@ int compar (const void* p1, const void* p2){
   if(*(float*)p1 > *(float*)p2) return 1;
 }
 
+void sendTelemetry() {
+  uint16_t cells_mv[NUM_CELLS] = {0};
+
+  // Populate mv array
+  for (int i = leading_zeros; i < NUM_CELLS - trailing_zeros; i++) {
+    cells_mv[i] = (uint16_t)volVals[i]*1000;
+  }
+  char *packet = new char[
+    6 + // header
+    2 * (NUM_CELLS - trailing_zeros - leading_zeros // cell voltages
+    + 1 // terminator
+  ]
+  packet[0] = FC_HEADER_0;
+  packet[1] = FC_HEADER_1;
+  packet[2] = FC_HEADER_2;
+  packet[3] = FC_HEADER_3;
+  packet[4] = FC_HEADER_4;
+  packet[5] = FC_HEADER_5;
+
+  for (int i = 0; i < NUM_CELLS - trailing_zeros - leading_zeros; i++) {
+    mv_arr_index = NUM_CELLS - trailing_zeros - i;
+    str_index = 6 + 2 * i;
+    *(int16_t *)(packet + str_index) = cells_mv[mv_arr_index];
+  }
+
+  Serial1.println(packet);
+  // YAY
+}
 
 /*
 Notes from our session 2/23/2022, change the code to account for:
