@@ -208,6 +208,7 @@ void loop() {
     //SERIAL.println("\nvol");
     // SERIAL.print((float)volVals[NUM_CELLS-TRAILING_ZEROES-1]);
     // SERIAL.print("\t");
+    // SERIAL.print("\n");
   }
 
   sendTelemetry();
@@ -243,7 +244,7 @@ void loop() {
       minIndex = i;
     } 
   }
-
+  //volMin = secondVolMin; //temp fix
   volAvg = volTotal / count;
   
   // print info:
@@ -406,6 +407,7 @@ void loop() {
       
       
       if (volMin < 0.4){
+      //if(secondVolMin<0.4)
         errorCount += 1;
         if(errorCount>countLimit){
           digitalWrite(RELAY, HIGH);
@@ -492,7 +494,7 @@ void sendTelemetry() {
   int str_index;
 
   for (int i = 0; i < NUM_CELLS - TRAILING_ZEROES - LEADING_ZEROES; i++) {
-    mv_arr_index = NUM_CELLS - TRAILING_ZEROES - i;
+    mv_arr_index = NUM_CELLS - 1 - TRAILING_ZEROES - i;
     str_index = 6 + 2 * i;
     *(uint8_t *)(packet + str_index) = cells_mv[mv_arr_index] >> 8;
     *(uint8_t *)(packet + str_index + 1) = cells_mv[mv_arr_index] & 0xFF;
